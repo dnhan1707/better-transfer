@@ -7,8 +7,16 @@ from alembic import context
 
 from app.db.connection import Base, engine
 
+import app.db.models.colleges
+import app.db.models.courses
+import app.db.models.universities
+import app.db.models.majors
+import app.db.models.university_courses
+import app.db.models.articulation_agreements
+
 from dotenv import load_dotenv
 import os
+
 
 load_dotenv()
 
@@ -18,7 +26,7 @@ config = context.config
 
 
 # Override the sqlalchemy.url with the DATABASE_URL from .env
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", "postgresql://postgres:nhancho1707@localhost:5432/better-transfer"))
 
 
 # Interpret the config file for Python logging.
@@ -30,13 +38,14 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+print("Detected tables:", target_metadata.tables.keys())
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
