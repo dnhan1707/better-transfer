@@ -1,0 +1,29 @@
+[
+    { "course_name": "CS Fundamentals", "course_code": "CS 31", "major_id": 28 },
+    { "course_name": "Algorithms", "course_code": "CS 180", "major_id": 28 },
+  
+    { "course_name": "Intro to Data Science", "course_code": "DATA 8", "major_id": 29 },
+    { "course_name": "Probability & Statistics", "course_code": "STAT 100", "major_id": 29 },
+  
+    { "course_name": "Principles of Marketing", "course_code": "BUS 101", "major_id": 30 },
+    { "course_name": "Business Stats", "course_code": "BUS 201", "major_id": 30 },
+  
+    { "course_name": "Microeconomics", "course_code": "ECON 100A", "major_id": 31 },
+    { "course_name": "Macroeconomics", "course_code": "ECON 100B", "major_id": 31 },
+  
+    { "course_name": "Physics for Engineers", "course_code": "ENGR 1A", "major_id": 32 },
+    { "course_name": "Thermodynamics", "course_code": "ENGR 10", "major_id": 32 },
+  
+    { "course_name": "General Biology I", "course_code": "BIO SCI 93", "major_id": 33 },
+    { "course_name": "Genetics", "course_code": "BIO SCI 97", "major_id": 33 },
+  
+    { "course_name": "Intro to Philosophy", "course_code": "PHIL 1", "major_id": 34 },
+    { "course_name": "Ethics", "course_code": "PHIL 170", "major_id": 34 },
+  
+    { "course_name": "U.S. History to 1877", "course_code": "HIST 17A", "major_id": 35 },
+    { "course_name": "U.S. History since 1877", "course_code": "HIST 17B", "major_id": 35 },
+  
+    { "course_name": "Linear Algebra", "course_code": "MATH 110A", "major_id": 36 },
+    { "course_name": "Multivariable Calculus", "course_code": "MATH 32A", "major_id": 36 }
+  ]
+  

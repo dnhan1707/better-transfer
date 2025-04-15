@@ -1,0 +1,17 @@
+[
+    { "code": "CS 1", "name": "Intro to CS", "units": 3, "difficulty": 2, "college_id": 11 },
+    { "code": "MATH 5", "name": "Calculus I", "units": 5, "difficulty": 3, "college_id": 12 },
+    { "code": "CS 2", "name": "Data Structures", "units": 3, "difficulty": 3, "college_id": 13 },
+    { "code": "MATH 6", "name": "Calculus II", "units": 5, "difficulty": 4, "college_id": 14 },
+    { "code": "ENG 1A", "name": "English Comp", "units": 3, "difficulty": 1, "college_id": 15 },
+    { "code": "ECON 1", "name": "Microeconomics", "units": 3, "difficulty": 2, "college_id": 11 },
+    { "code": "PHYS 1", "name": "Physics for Engineers", "units": 4, "difficulty": 4, "college_id": 12 },
+    { "code": "CS 10", "name": "Programming in Python", "units": 3, "difficulty": 2, "college_id": 13 },
+    { "code": "BUS 1", "name": "Intro to Business", "units": 3, "difficulty": 1, "college_id": 14 },
+    { "code": "MATH 1", "name": "Statistics", "units": 4, "difficulty": 2, "college_id": 15 },
+    { "code": "MATH 7", "name": "Differential Equations", "units": 4, "difficulty": 4, "college_id": 11 },
+    { "code": "BIO 1", "name": "General Biology", "units": 4, "difficulty": 3, "college_id": 12 },
+    { "code": "CHEM 1", "name": "General Chemistry", "units": 5, "difficulty": 4, "college_id": 13 },
+    { "code": "PHIL 1", "name": "Intro to Philosophy", "units": 3, "difficulty": 2, "college_id": 14 },
+    { "code": "HIST 11", "name": "US History to 1877", "units": 3, "difficulty": 2, "college_id": 15 }
+]

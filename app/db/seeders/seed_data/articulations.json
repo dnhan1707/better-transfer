@@ -1,0 +1,111 @@
+[
+    {
+      "community_college_course_id": 46,
+      "university_course_id": 70,
+      "university_id": 17,
+      "major_id": 28
+    },
+    {
+      "community_college_course_id": 47,
+      "university_course_id": 71,
+      "university_id": 17,
+      "major_id": 28
+    },
+    {
+      "community_college_course_id": 48,
+      "university_course_id": 72,
+      "university_id": 18,
+      "major_id": 29
+    },
+    {
+      "community_college_course_id": 49,
+      "university_course_id": 73,
+      "university_id": 18,
+      "major_id": 29
+    },
+    {
+      "community_college_course_id": 50,
+      "university_course_id": 74,
+      "university_id": 19,
+      "major_id": 30
+    },
+    {
+      "community_college_course_id": 51,
+      "university_course_id": 75,
+      "university_id": 19,
+      "major_id": 30
+    },
+    {
+      "community_college_course_id": 52,
+      "university_course_id": 76,
+      "university_id": 20,
+      "major_id": 31
+    },
+    {
+      "community_college_course_id": 53,
+      "university_course_id": 77,
+      "university_id": 20,
+      "major_id": 31
+    },
+    {
+      "community_college_course_id": 54,
+      "university_course_id": 78,
+      "university_id": 21,
+      "major_id": 32
+    },
+    {
+      "community_college_course_id": 55,
+      "university_course_id": 79,
+      "university_id": 21,
+      "major_id": 32
+    },
+    {
+      "community_college_course_id": 56,
+      "university_course_id": 80,
+      "university_id": 17,
+      "major_id": 33
+    },
+    {
+      "community_college_course_id": 57,
+      "university_course_id": 81,
+      "university_id": 17,
+      "major_id": 33
+    },
+    {
+      "community_college_course_id": 58,
+      "university_course_id": 82,
+      "university_id": 18,
+      "major_id": 34
+    },
+    {
+      "community_college_course_id": 59,
+      "university_course_id": 83,
+      "university_id": 18,
+      "major_id": 34
+    },
+    {
+      "community_college_course_id": 60,
+      "university_course_id": 84,
+      "university_id": 19,
+      "major_id": 35
+    },
+    {
+      "community_college_course_id": 46,
+      "university_course_id": 85,
+      "university_id": 19,
+      "major_id": 35
+    },
+    {
+      "community_college_course_id": 47,
+      "university_course_id": 86,
+      "university_id": 20,
+      "major_id": 36
+    },
+    {
+      "community_college_course_id": 48,
+      "university_course_id": 87,
+      "university_id": 20,
+      "major_id": 36
+    }
+  ]
+  
