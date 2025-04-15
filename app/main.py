@@ -2,10 +2,11 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.db.connection import get_db
+from app.api.routes import transfer
 
 
 app = FastAPI()
-
+app.include_router(transfer.router)
 
 @app.get("/")
 def read_root():
