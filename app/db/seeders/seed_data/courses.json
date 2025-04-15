@@ -13,5 +13,20 @@
     { "code": "BIO 1", "name": "General Biology", "units": 4, "difficulty": 3, "college_id": 12 },
     { "code": "CHEM 1", "name": "General Chemistry", "units": 5, "difficulty": 4, "college_id": 13 },
     { "code": "PHIL 1", "name": "Intro to Philosophy", "units": 3, "difficulty": 2, "college_id": 14 },
-    { "code": "HIST 11", "name": "US History to 1877", "units": 3, "difficulty": 2, "college_id": 15 }
+    { "code": "HIST 11", "name": "US History to 1877", "units": 3, "difficulty": 2, "college_id": 15 },
+    { "code": "CS 20", "name": "Computer Architecture", "units": 4, "difficulty": 3, "college_id": 11 },
+    { "code": "CS 22", "name": "Web Development", "units": 3, "difficulty": 2, "college_id": 12 },
+    { "code": "MATH 10", "name": "Discrete Mathematics", "units": 4, "difficulty": 3, "college_id": 13 },
+    { "code": "BUS 110", "name": "Business Law", "units": 3, "difficulty": 2, "college_id": 14 },
+    { "code": "ENGR 20", "name": "Statics", "units": 3, "difficulty": 3, "college_id": 15 },
+    { "code": "BIO 2", "name": "Cell Biology", "units": 4, "difficulty": 4, "college_id": 11 },
+    { "code": "CHEM 2", "name": "Organic Chemistry", "units": 5, "difficulty": 4, "college_id": 12 },
+    { "code": "PHIL 3", "name": "Critical Thinking", "units": 3, "difficulty": 2, "college_id": 13 },
+    { "code": "ART 50", "name": "Intro to Digital Media", "units": 3, "difficulty": 1, "college_id": 14 },
+    { "code": "PSYCH 15", "name": "Social Psychology", "units": 3, "difficulty": 2, "college_id": 15 },
+    { "code": "SOC 10", "name": "Race and Ethnicity", "units": 3, "difficulty": 2, "college_id": 11 },
+    { "code": "HIST 30", "name": "California History", "units": 3, "difficulty": 1, "college_id": 12 },
+    { "code": "POLI SCI 3", "name": "International Relations", "units": 3, "difficulty": 3, "college_id": 13 },
+    { "code": "NURS 50", "name": "Nursing Fundamentals", "units": 5, "difficulty": 4, "college_id": 14 },
+    { "code": "MATH 15", "name": "Mathematical Proofs", "units": 4, "difficulty": 4, "college_id": 15 }
 ]

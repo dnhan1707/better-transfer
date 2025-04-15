@@ -24,6 +24,22 @@
     { "course_name": "U.S. History since 1877", "course_code": "HIST 17B", "major_id": 35 },
   
     { "course_name": "Linear Algebra", "course_code": "MATH 110A", "major_id": 36 },
-    { "course_name": "Multivariable Calculus", "course_code": "MATH 32A", "major_id": 36 }
-  ]
+    { "course_name": "Multivariable Calculus", "course_code": "MATH 32A", "major_id": 36 },
+    
+    { "course_name": "Computer Architecture", "course_code": "CS 111", "major_id": 28 },
+    { "course_name": "Full Stack Development", "course_code": "CS 128", "major_id": 28 },
+    { "course_name": "Discrete Math", "course_code": "MATH 61", "major_id": 29 },
+    { "course_name": "Business Law", "course_code": "BUS 205", "major_id": 30 },
+    { "course_name": "Engineering Statics", "course_code": "ENGR 36", "major_id": 32 },
+    { "course_name": "Cell Biology", "course_code": "BIO 101", "major_id": 33 },
+    { "course_name": "Organic Chemistry I", "course_code": "CHEM 210A", "major_id": 33 },
+    { "course_name": "Logic & Critical Thinking", "course_code": "PHIL 102", "major_id": 34 },
+    { "course_name": "Digital Art & Design", "course_code": "ART 112", "major_id": 35 },
+    { "course_name": "Social Psychology", "course_code": "PSYCH 135", "major_id": 36 },
+    { "course_name": "Race in American Society", "course_code": "SOC 112", "major_id": 36 },
+    { "course_name": "California History", "course_code": "HIST 109", "major_id": 35 },
+    { "course_name": "Global Politics", "course_code": "POLI SCI 130", "major_id": 34 },
+    { "course_name": "Intro to Nursing Theory", "course_code": "NURS 101", "major_id": 33 },
+    { "course_name": "Proof-Based Math", "course_code": "MATH 131", "major_id": 29 }
+]
   
