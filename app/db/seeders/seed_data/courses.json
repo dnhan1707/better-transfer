@@ -1,32 +1,86 @@
 [
-    { "code": "CS 1", "name": "Intro to CS", "units": 3, "difficulty": 2, "college_id": 11 },
-    { "code": "MATH 5", "name": "Calculus I", "units": 5, "difficulty": 3, "college_id": 12 },
-    { "code": "CS 2", "name": "Data Structures", "units": 3, "difficulty": 3, "college_id": 13 },
-    { "code": "MATH 6", "name": "Calculus II", "units": 5, "difficulty": 4, "college_id": 14 },
-    { "code": "ENG 1A", "name": "English Comp", "units": 3, "difficulty": 1, "college_id": 15 },
-    { "code": "ECON 1", "name": "Microeconomics", "units": 3, "difficulty": 2, "college_id": 11 },
-    { "code": "PHYS 1", "name": "Physics for Engineers", "units": 4, "difficulty": 4, "college_id": 12 },
-    { "code": "CS 10", "name": "Programming in Python", "units": 3, "difficulty": 2, "college_id": 13 },
-    { "code": "BUS 1", "name": "Intro to Business", "units": 3, "difficulty": 1, "college_id": 14 },
-    { "code": "MATH 1", "name": "Statistics", "units": 4, "difficulty": 2, "college_id": 15 },
-    { "code": "MATH 7", "name": "Differential Equations", "units": 4, "difficulty": 4, "college_id": 11 },
-    { "code": "BIO 1", "name": "General Biology", "units": 4, "difficulty": 3, "college_id": 12 },
-    { "code": "CHEM 1", "name": "General Chemistry", "units": 5, "difficulty": 4, "college_id": 13 },
-    { "code": "PHIL 1", "name": "Intro to Philosophy", "units": 3, "difficulty": 2, "college_id": 14 },
-    { "code": "HIST 11", "name": "US History to 1877", "units": 3, "difficulty": 2, "college_id": 15 },
-    { "code": "CS 20", "name": "Computer Architecture", "units": 4, "difficulty": 3, "college_id": 11 },
-    { "code": "CS 22", "name": "Web Development", "units": 3, "difficulty": 2, "college_id": 12 },
-    { "code": "MATH 10", "name": "Discrete Mathematics", "units": 4, "difficulty": 3, "college_id": 13 },
-    { "code": "BUS 110", "name": "Business Law", "units": 3, "difficulty": 2, "college_id": 14 },
-    { "code": "ENGR 20", "name": "Statics", "units": 3, "difficulty": 3, "college_id": 15 },
-    { "code": "BIO 2", "name": "Cell Biology", "units": 4, "difficulty": 4, "college_id": 11 },
-    { "code": "CHEM 2", "name": "Organic Chemistry", "units": 5, "difficulty": 4, "college_id": 12 },
-    { "code": "PHIL 3", "name": "Critical Thinking", "units": 3, "difficulty": 2, "college_id": 13 },
-    { "code": "ART 50", "name": "Intro to Digital Media", "units": 3, "difficulty": 1, "college_id": 14 },
-    { "code": "PSYCH 15", "name": "Social Psychology", "units": 3, "difficulty": 2, "college_id": 15 },
-    { "code": "SOC 10", "name": "Race and Ethnicity", "units": 3, "difficulty": 2, "college_id": 11 },
-    { "code": "HIST 30", "name": "California History", "units": 3, "difficulty": 1, "college_id": 12 },
-    { "code": "POLI SCI 3", "name": "International Relations", "units": 3, "difficulty": 3, "college_id": 13 },
-    { "code": "NURS 50", "name": "Nursing Fundamentals", "units": 5, "difficulty": 4, "college_id": 14 },
-    { "code": "MATH 15", "name": "Mathematical Proofs", "units": 4, "difficulty": 4, "college_id": 15 }
-]
+    {
+        "code": "CS 002", 
+        "name": "Fundamentals of Computer Science I",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "CS 003A", 
+        "name": "Fundamentals of Computer Science II (C++)",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "CIS 014", 
+        "name": "C++ Programming",
+        "units": 3,
+        "difficulty": 3,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "CS 008", 
+        "name": "Fundamentals of Computer Science III - Data Structures",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "CS 066", 
+        "name": "Assembly Language Programming for the Sciences and Mathematics",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 005A", 
+        "name": "Single Variable Calculus I",
+        "units": 5,
+        "difficulty": 5,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 005B", 
+        "name": "Single Variable Calculus II",
+        "units": 5,
+        "difficulty": 5,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 005C", 
+        "name": "Multivariable Calculus",
+        "units": 5,
+        "difficulty": 5,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 010", 
+        "name": "Linear Algebra and Applications",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 055", 
+        "name": "Differential Equations",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "MATH 022", 
+        "name": "Discrete Mathematics",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "ENGL 001A", 
+        "name": "Reading and Composition",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    }
+  ]

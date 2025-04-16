@@ -12,11 +12,11 @@ def run_all_seeder(db: Session):
     print("Starting database seeding process...")
     
     # Run seeders in correct dependency order
-    # seed_colleges(db)
-    # seed_universities(db)
-    # seed_majors(db)       
-    # seed_courses(db)      
-    # seed_universities_courses(db)  
+    seed_colleges(db)
+    seed_universities(db)
+    seed_majors(db)       
+    seed_courses(db)      
+    seed_universities_courses(db)  
     seed_articulations(db)  
     
     # print("Database seeding complete!")

@@ -1,45 +1,78 @@
 [
-    { "course_name": "CS Fundamentals", "course_code": "CS 31", "major_id": 28 },
-    { "course_name": "Algorithms", "course_code": "CS 180", "major_id": 28 },
-  
-    { "course_name": "Intro to Data Science", "course_code": "DATA 8", "major_id": 29 },
-    { "course_name": "Probability & Statistics", "course_code": "STAT 100", "major_id": 29 },
-  
-    { "course_name": "Principles of Marketing", "course_code": "BUS 101", "major_id": 30 },
-    { "course_name": "Business Stats", "course_code": "BUS 201", "major_id": 30 },
-  
-    { "course_name": "Microeconomics", "course_code": "ECON 100A", "major_id": 31 },
-    { "course_name": "Macroeconomics", "course_code": "ECON 100B", "major_id": 31 },
-  
-    { "course_name": "Physics for Engineers", "course_code": "ENGR 1A", "major_id": 32 },
-    { "course_name": "Thermodynamics", "course_code": "ENGR 10", "major_id": 32 },
-  
-    { "course_name": "General Biology I", "course_code": "BIO SCI 93", "major_id": 33 },
-    { "course_name": "Genetics", "course_code": "BIO SCI 97", "major_id": 33 },
-  
-    { "course_name": "Intro to Philosophy", "course_code": "PHIL 1", "major_id": 34 },
-    { "course_name": "Ethics", "course_code": "PHIL 170", "major_id": 34 },
-  
-    { "course_name": "U.S. History to 1877", "course_code": "HIST 17A", "major_id": 35 },
-    { "course_name": "U.S. History since 1877", "course_code": "HIST 17B", "major_id": 35 },
-  
-    { "course_name": "Linear Algebra", "course_code": "MATH 110A", "major_id": 36 },
-    { "course_name": "Multivariable Calculus", "course_code": "MATH 32A", "major_id": 36 },
-    
-    { "course_name": "Computer Architecture", "course_code": "CS 111", "major_id": 28 },
-    { "course_name": "Full Stack Development", "course_code": "CS 128", "major_id": 28 },
-    { "course_name": "Discrete Math", "course_code": "MATH 61", "major_id": 29 },
-    { "course_name": "Business Law", "course_code": "BUS 205", "major_id": 30 },
-    { "course_name": "Engineering Statics", "course_code": "ENGR 36", "major_id": 32 },
-    { "course_name": "Cell Biology", "course_code": "BIO 101", "major_id": 33 },
-    { "course_name": "Organic Chemistry I", "course_code": "CHEM 210A", "major_id": 33 },
-    { "course_name": "Logic & Critical Thinking", "course_code": "PHIL 102", "major_id": 34 },
-    { "course_name": "Digital Art & Design", "course_code": "ART 112", "major_id": 35 },
-    { "course_name": "Social Psychology", "course_code": "PSYCH 135", "major_id": 36 },
-    { "course_name": "Race in American Society", "course_code": "SOC 112", "major_id": 36 },
-    { "course_name": "California History", "course_code": "HIST 109", "major_id": 35 },
-    { "course_name": "Global Politics", "course_code": "POLI SCI 130", "major_id": 34 },
-    { "course_name": "Intro to Nursing Theory", "course_code": "NURS 101", "major_id": 33 },
-    { "course_name": "Proof-Based Math", "course_code": "MATH 131", "major_id": 29 }
-]
+    {
+      "course_name": "Introduction to Computer Science I",
+      "course_code": "COM SCI 31",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Introduction to Computer Science II",
+      "course_code": "COM SCI 32",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Introduction to Computer Organization",
+      "course_code": "COM SCI 33",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Logic Design of Digital Systems",
+      "course_code": "COM SCI M51A",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Logic Design of Digital Systems",
+      "course_code": "EC ENGR M16",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Differential and Integral Calculus",
+      "course_code": "MATH 31A",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Integration and Infinite Series",
+      "course_code": "MATH 31B",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Calculus of Several Variables",
+      "course_code": "MATH 32A",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Linear Algebra and Applications",
+      "course_code": "MATH 33A",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Differential Equations",
+      "course_code": "MATH 33B",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Introduction to Discrete Structures",
+      "course_code": "MATH 61",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Physics Laboratory: Mechanics",
+      "course_code": "PHYSICS 4AL",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Physics Laboratory: Electricity and Magnetism",
+      "course_code": "PHYSICS 4BL",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "English Composition, Rhetoric, and Language",
+      "course_code": "ENGCOMP 3",
+      "university_name": "University of California, Los Angeles"
+    },
+    {
+      "course_name": "Software Construction Laboratory",
+      "course_code": "COM SCI 35L",
+      "university_name": "University of California, Los Angeles"
+    }
+  ]
   

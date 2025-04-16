@@ -1,11 +1,5 @@
 [
-    { "major_name": "Computer Science", "university_id": 17 },
-    { "major_name": "Data Science", "university_id": 18 },
-    { "major_name": "Business Administration", "university_id": 19 },
-    { "major_name": "Economics", "university_id": 20 },
-    { "major_name": "Mechanical Engineering", "university_id": 21 },
-    { "major_name": "Biology", "university_id": 17 },
-    { "major_name": "Philosophy", "university_id": 18 },
-    { "major_name": "History", "university_id": 19 },
-    { "major_name": "Mathematics", "university_id": 20 }
+  {"major_name": "Computer Science", "university_name": "University of California, Los Angeles"},
+  {"major_name": "Data Science", "university_name": "University of California, Berkeley"},
+  {"major_name": "Business Administration", "university_name": "University of California, Irvine"}
 ]
