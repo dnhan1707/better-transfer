@@ -12,4 +12,4 @@ class Majors(Base):
     university_id = Column(Integer, ForeignKey("universities.id"), nullable=False)
     university = relationship("Universities", back_populates="majors", cascade="all, delete")
     articulations = relationship("ArticulationAgreements", back_populates="major", cascade="all, delete")
-    university_courses = relationship("UniversityCourses", back_populates="major", cascade="all, delete")
+    course_mappings = relationship("CourseMajorMapping", back_populates="major")

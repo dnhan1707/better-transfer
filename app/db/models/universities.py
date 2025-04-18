@@ -11,3 +11,4 @@ class Universities(Base):
     is_uc = Column(Boolean, nullable=False)
     majors = relationship("Majors", back_populates="university", cascade="all, delete")
     articulations = relationship("ArticulationAgreements", back_populates="university", cascade="all, delete")
+    university_courses = relationship("UniversityCourses", back_populates="university")

@@ -9,8 +9,11 @@ class UniversityCourses(Base):
     id = Column(Integer, primary_key=True, index=True)
     course_name = Column(String, nullable=False)
     course_code = Column(String, nullable=False)
-    major_id = Column(Integer, ForeignKey("majors.id"), nullable=False)
+    # major_id = Column(Integer, ForeignKey("majors.id"), nullable=False)
 
-    # Relationships
-    major = relationship("Majors", back_populates="university_courses")
-    articulations = relationship("ArticulationAgreements", back_populates="university_course", cascade="all, delete")
+    university_id = Column(Integer, ForeignKey("universities.id"), nullable=False)
+    university = relationship("Universities", back_populates="university_courses")
+    
+    # New relationship to CourseMajorMapping
+    major_mappings = relationship("CourseMajorMapping", back_populates="university_course")
+    articulations = relationship("ArticulationAgreements", back_populates="university_course")
