@@ -42,10 +42,16 @@ def seed_articulations(db: Session):
                 
         uni_courses_map = {}
         for uni_course in db.query(UniversityCourses).all():
-            major = db.query(Majors).filter(Majors.id == uni_course.major_id).first()
-            if major:
-                university = db.query(Universities).filter(Universities.id == major.university_id).first()
-                if university:
+            # Get the university directly
+            university = db.query(Universities).filter(Universities.id == uni_course.university_id).first()
+            if not university:
+                continue
+                
+            # For each university course, get the associated majors through the mapping table
+            for mapping in uni_course.major_mappings:
+                major = mapping.major
+                if major:
+                    # Create a key for each university-major-course combination
                     key = f"{university.university_name}_{major.major_name}_{uni_course.course_code}"
                     uni_courses_map[key] = uni_course.id
                     
