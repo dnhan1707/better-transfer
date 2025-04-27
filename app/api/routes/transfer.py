@@ -4,7 +4,6 @@ from typing import List
 
 from app.db.connection import get_db
 from app.services.transfer_service import generate_transfer_plan
-from app.schemas.transfer import TransferPlanCourse
 
 
 router = APIRouter(
@@ -13,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[TransferPlanCourse])
+@router.get("/")
 def get_transfer_plan(
     college_id: int,
     university_id: int,
