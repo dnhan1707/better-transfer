@@ -5,3 +5,4 @@ from .majors import Majors
 from .articulation_agreements import ArticulationAgreements
 from .university_courses import UniversityCourses
 from .course_major_mapping import CourseMajorMapping
+from .prerequisites import Prerequisites

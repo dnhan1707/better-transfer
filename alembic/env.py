@@ -14,6 +14,8 @@ import app.db.models.majors
 import app.db.models.university_courses
 import app.db.models.articulation_agreements
 import app.db.models.course_major_mapping
+import app.db.models.prerequisites
+
 
 from dotenv import load_dotenv
 import os
