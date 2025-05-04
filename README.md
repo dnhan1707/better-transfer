@@ -1,4 +1,4 @@
-# 🎓 Better Transfer — Plan Your Transfer, Smarter
+# 🎓 Better Transfer — Plan Your Transfer, Smarter (In Progress)
 
 Better Transfer is a web application that helps community college students plan and track their academic journey toward transferring to a 4-year university — especially UC campuses in California.
 
