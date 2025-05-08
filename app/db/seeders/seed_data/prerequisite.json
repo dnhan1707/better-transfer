@@ -1,0 +1,56 @@
+[
+    {
+        "course_code": "MATH 005C",
+        "college_id": 1,
+        "prerequisite_course_code": "MATH 005B",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "MATH 005B",
+        "college_id": 1,
+        "prerequisite_course_code": "MATH 005A",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "MATH 010",
+        "college_id": 1,
+        "prerequisite_course_code": "MATH 005A",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "MATH 055",
+        "college_id": 1,
+        "prerequisite_course_code": "MATH 005B",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "MATH 022",
+        "college_id": 1,
+        "prerequisite_course_code": "MATH 005A",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "CS 003A",
+        "college_id": 1,
+        "prerequisite_course_code": "CS 002",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "CS 003B",
+        "college_id": 1,
+        "prerequisite_course_code": "CS 002",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "CS 008",
+        "college_id": 1,
+        "prerequisite_course_code": "CS 003A",
+        "prerequisite_type": "required"
+    },
+    {
+        "course_code": "CS 066",
+        "college_id": 1,
+        "prerequisite_course_code": "CS 002",
+        "prerequisite_type": "required"
+    }
+]
