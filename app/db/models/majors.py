@@ -13,3 +13,4 @@ class Majors(Base):
     university = relationship("Universities", back_populates="majors", cascade="all, delete")
     articulations = relationship("ArticulationAgreements", back_populates="major", cascade="all, delete")
     course_mappings = relationship("CourseMajorMapping", back_populates="major")
+    articulation_groups = relationship("ArticulationGroup", back_populates="major")

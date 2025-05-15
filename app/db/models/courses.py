@@ -17,3 +17,4 @@ class Courses(Base):
     articulations = relationship("ArticulationAgreements", back_populates="community_college_course", cascade="all, delete")
     prerequisites = relationship("Prerequisites", foreign_keys="[Prerequisites.course_id]", back_populates="course")
     is_prerequisite_for = relationship("Prerequisites", foreign_keys="[Prerequisites.prerequisite_course_id]", back_populates="prerequisite")
+    articulation_groups = relationship("ArticulationGroupCourses", back_populates="community_college_course")

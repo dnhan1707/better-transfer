@@ -16,4 +16,4 @@ class ArticulationAgreements(Base):
     community_college_course = relationship("Courses", back_populates="articulations")
     university_course = relationship("UniversityCourses", back_populates="articulations")
     university = relationship("Universities", back_populates="articulations")
-    major = relationship("Majors", back_populates="articulations")
+    major = relationship("Majors", back_populates="articulations")  
