@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "university_courses" : ["COM SCI 31"],
+        "operator" : "OR",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 2,
+        "university_courses" : ["COM SCI 32"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 3,
+        "university_courses" : ["COM SCI 33"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 4,
+        "university_courses" : ["COM SCI M51A"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 5,
+        "university_courses" : ["MATH 31A"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 6,
+        "university_courses" : ["MATH 31B"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 7,
+        "university_courses" : ["MATH 32A"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 8,
+        "university_courses" : ["MATH 33A"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 9,
+        "university_courses" : ["MATH 33B"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }, 
+    {
+        "id": 10,
+        "university_courses" : ["MATH 61"],
+        "operator" : "AND",
+        "major_name" : "Computer Science",
+        "university_name": "University of California, Los Angeles"
+    }
+]
