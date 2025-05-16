@@ -1,0 +1,36 @@
+[
+  {
+    "university_name": "University of California, Los Angeles",
+    "major_name": "Computer Science",
+    "college_name": "Pasadena City College",
+    "expression": {
+      "operator": "AND",
+      "groups": [
+        {
+          "operator": "OR",
+          "groups": ["COM SCI 31", "COM SCI 32"]   
+        },
+        "COM SCI 33",
+        "COM SCI M51A"                   
+      ]
+    }
+  },
+  {
+    "university_name": "University of California, Los Angeles",
+    "major_name": "Computer Science",
+    "college_name": "Pasadena City College",
+    "expression": {
+      "operator": "AND",
+      "groups": ["MATH 31A", "MATH 31B", "MATH 32A", "MATH 33A"]   
+    }
+  },
+  {
+    "university_name": "University of California, Los Angeles",
+    "major_name": "Computer Science",
+    "college_name": "Pasadena City College",
+    "expression": {
+      "operator": "OR",
+      "groups": ["MATH 33B", "MATH 61"]  
+    }
+  }
+]
