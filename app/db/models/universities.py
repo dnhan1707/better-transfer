@@ -15,4 +15,3 @@ class Universities(Base):
     articulations = relationship("ArticulationAgreements", back_populates="university", cascade="all, delete")
     university_courses = relationship("UniversityCourses", back_populates="university")
     articulation_groups = relationship("ArticulationGroup", back_populates="university")
-    articulation_agreements = relationship("ArticulationAgreements", back_populates="university")

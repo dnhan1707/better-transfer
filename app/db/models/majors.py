@@ -15,4 +15,3 @@ class Majors(Base):
     articulations = relationship("ArticulationAgreements", back_populates="major", cascade="all, delete")
     course_mappings = relationship("CourseMajorMapping", back_populates="major")
     articulation_groups = relationship("ArticulationGroup", back_populates="major")
-    articulation_agreements = relationship("ArticulationAgreements", back_populates="major")    

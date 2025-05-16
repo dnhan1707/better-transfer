@@ -9,4 +9,4 @@ class Colleges(Base):
     id = Column(Integer, primary_key=True, index=True)
     college_name = Column(String, unique=True, index=True, nullable=False)
     courses = relationship("Courses", back_populates="college", cascade="all, delete")  
-# colleges table has a list a community college
+    articulation_groups = relationship("ArticulationGroup", back_populates="college")
