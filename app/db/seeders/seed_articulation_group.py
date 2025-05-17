@@ -17,21 +17,48 @@ def seed_articulation_group(db: Session):
         return
 
     try:
-        current_dir = os.path(os.path.abspath(__file__))
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(current_dir, "seed_data", "articulation_group.json")
 
         with open(file_path, "r") as file:
-            articulation_group = json.load(file)
+            articulation_groups = json.load(file)
 
 
-        for group in articulation_group:
-            id = group.id
-            university_list = group.ununiversity_courses
-            operator = group.operator
-            major = group.major_name
-            uni_name = group.university_name
+        for group in articulation_groups:
+            university = db.query(Universities).filter(
+                Universities.university_name == group["university_name"]
+            ).first()
+            if not university:
+                print(f"University not found: {group['university_name']}")
+                continue
 
+            major = db.query(Majors).filter(
+                Majors.major_name == group["major_name"],
+                Majors.university_id == university.id
+            ).first()
+            if not major:
+                print(f"Major not found: {group['major_name']} at {group['university_name']}")
+                continue
             
+            college = db.query(Colleges).filter(
+                Colleges.college_name == group["college_name"]
+            ).first()
+            if not college:
+                print(f"College not found: {group['college_name']}")
+                continue
+            
+            new_group = ArticulationGroup(
+                university_id=university.id,
+                major_id = major.id,
+                college_id = college.id,
+                expression = group["expression"]
+            )
+
+            db.add(new_group)
+
+        db.commit()
+        print(f"Successfully seeded {len(articulation_groups)} articulation groups")
+
 
     except Exception as e:
         db.rollback()

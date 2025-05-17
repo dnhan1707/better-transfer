@@ -19,4 +19,3 @@ class ArticulationGroup(Base):
     major = relationship("Majors", back_populates="articulation_groups")
     university = relationship("Universities", back_populates="articulation_groups")
     college = relationship("Colleges", back_populates="articulation_groups")
-    courses = relationship("ArticulationGroupCourses", back_populates="articulation_group")

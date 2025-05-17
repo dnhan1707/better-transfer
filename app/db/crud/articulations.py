@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from app.db.models.articulation_agreements import ArticulationAgreements
 from app.db.models.articulation_group import ArticulationGroup
-from app.db.models.articulation_group_courses import ArticulationGroupCourses
 from app.db.models.courses import Courses
 from app.db.models.university_courses import UniversityCourses
 from sqlalchemy import func
@@ -17,15 +16,6 @@ def get_required_cc_courses_for_transfer(db: Session, college_id: int, universit
             ArticulationGroup,
             UniversityCourses,
             Courses, 
-            ArticulationGroupCourses
-        )
-        .join(
-            ArticulationGroupCourses,
-            ArticulationGroup.id == ArticulationGroupCourses.articulation_group_id
-        )
-        .join(
-            Courses,
-            Courses.id == ArticulationGroupCourses.community_college_course_id
         )
         .join(
             UniversityCourses,
