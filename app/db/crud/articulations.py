@@ -6,8 +6,8 @@ from app.db.models.university_courses import UniversityCourses
 from app.db.models.universities import Universities
 from app.db.models.majors import Majors
 from app.db.models.colleges import Colleges
-
-from sqlalchemy import func
+from app.db.models.prerequisites import Prerequisites
+from sqlalchemy.orm import aliased
 
 
 def db_get_articulation_groups(db: Session, college_id: int, university_id: int, major_id: int):
@@ -198,3 +198,19 @@ def db_get_cc_course_relationships_for_expression(db: Session, university_id: in
         })
     
     return result
+
+def db_get_prerequisite_relationships_for_college(db: Session, college_id: int):
+    PrerequisiteCourse = aliased(Courses)
+    return db.query(
+        Courses.code.label("course_code"),
+        Prerequisites.prerequisite_type,
+        PrerequisiteCourse.code.label("prerequisite_code")
+    ).join(
+        Prerequisites,
+        Courses.id == Prerequisites.id
+    ).join(
+        PrerequisiteCourse,
+        Prerequisites.prerequisite_course_id == PrerequisiteCourse.id
+    ).filter(
+        Courses.college_id == college_id
+    ).all()
