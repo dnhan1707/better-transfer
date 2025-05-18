@@ -1,7 +1,8 @@
 import os
 import json
+import uuid
 from sqlalchemy.orm import Session
-from app.db.models.articulation_agreements import ArticulationAgreements
+from app.db.models.articulation_agreements import ArticulationAgreements, ArticulationRelationshipType
 from app.db.models.courses import Courses
 from app.db.models.colleges import Colleges
 from app.db.models.universities import Universities
@@ -25,7 +26,7 @@ def seed_articulations(db: Session):
         colleges = {c.college_name: c.id for c in db.query(Colleges).all()}
         universities = {u.university_name: u.id for u in db.query(Universities).all()}
         
-        # More complex lookups
+        # Course lookup map
         courses_map = {}
         for course in db.query(Courses).all():
             college = db.query(Colleges).filter(Colleges.id == course.college_id).first()
@@ -33,6 +34,7 @@ def seed_articulations(db: Session):
                 key = f"{college.college_name}_{course.code}"
                 courses_map[key] = course.id
                 
+        # Majors lookup map
         majors_map = {}
         for major in db.query(Majors).all():
             university = db.query(Universities).filter(Universities.id == major.university_id).first()
@@ -40,66 +42,83 @@ def seed_articulations(db: Session):
                 key = f"{university.university_name}_{major.major_name}"
                 majors_map[key] = major.id
                 
+        # University courses lookup map
         uni_courses_map = {}
         for uni_course in db.query(UniversityCourses).all():
-            # Get the university directly
             university = db.query(Universities).filter(Universities.id == uni_course.university_id).first()
             if not university:
                 continue
                 
-            # For each university course, get the associated majors through the mapping table
-            for mapping in uni_course.major_mappings:
-                major = mapping.major
-                if major:
-                    # Create a key for each university-major-course combination
-                    key = f"{university.university_name}_{major.major_name}_{uni_course.course_code}"
-                    uni_courses_map[key] = uni_course.id
-                    
+            key = f"{university.university_name}_{uni_course.course_code}"
+            uni_courses_map[key] = uni_course.id
+        
         # Create articulations
         successful_count = 0
+        
         for item in articulations_data:
             # Extract data
-            cc_name = item["community_college"]["college_name"]
-            cc_code = item["community_college"]["course_code"]
-            uni_name = item["university"]["university_name"] 
-            major_name = item["university"]["major_name"]
-            uni_code = item["university"]["course_code"]
+            uni_name = item["university_name"]
+            cc_name = item["college"]
+            major_name = item["major_name"]
+            uni_course_code = item["university_course"]
+            relationship_type_str = item["relationship_type"]
+            cc_courses = item["community_college_courses"]
             
             # Look up IDs
-            cc_course_key = f"{cc_name}_{cc_code}"
-            uni_key = uni_name
-            major_key = f"{uni_name}_{major_name}"
-            uni_course_key = f"{uni_name}_{major_name}_{uni_code}"
-            
-            # Skip if any component is missing
-            if cc_course_key not in courses_map:
-                print(f"Warning: Community college course {cc_code} at {cc_name} not found")
-                continue
-                
-            if uni_key not in universities:
+            if uni_name not in universities:
                 print(f"Warning: University {uni_name} not found")
                 continue
                 
+            uni_id = universities[uni_name]
+            
+            major_key = f"{uni_name}_{major_name}"
             if major_key not in majors_map:
                 print(f"Warning: Major {major_name} at {uni_name} not found")
                 continue
                 
+            major_id = majors_map[major_key]
+            
+            uni_course_key = f"{uni_name}_{uni_course_code}"
             if uni_course_key not in uni_courses_map:
-                print(f"Warning: University course {uni_code} for {major_name} at {uni_name} not found")
+                print(f"Warning: University course {uni_course_code} at {uni_name} not found")
                 continue
                 
-            # Create the articulation
-            articulation = ArticulationAgreements(
-                community_college_course_id=courses_map[cc_course_key],
-                university_course_id=uni_courses_map[uni_course_key],
-                university_id=universities[uni_key],
-                major_id=majors_map[major_key]
-            )
-            db.add(articulation)
-            successful_count += 1
+            uni_course_id = uni_courses_map[uni_course_key]
+            
+            # Determine relationship type
+            relationship_type = ArticulationRelationshipType.OR
+            if relationship_type_str == "AND":
+                relationship_type = ArticulationRelationshipType.AND
+            
+            # Generate a unique group ID for this set of articulations
+            group_id = f"{uni_name}_{uni_course_code}_{uuid.uuid4().hex[:8]}"
+            
+            # Process each community college course
+            for cc_course_info in cc_courses:
+                cc_code = cc_course_info["code"]
+                cc_course_key = f"{cc_name}_{cc_code}"
+                
+                if cc_course_key not in courses_map:
+                    print(f"Warning: Community college course {cc_code} at {cc_name} not found")
+                    continue
+                
+                cc_course_id = courses_map[cc_course_key]
+                
+                # Create the articulation
+                articulation = ArticulationAgreements(
+                    community_college_course_id=cc_course_id,
+                    university_course_id=uni_course_id,
+                    university_id=uni_id,
+                    major_id=major_id,
+                    group_id=group_id,
+                    relationship_type=relationship_type
+                )
+                db.add(articulation)
+                successful_count += 1
         
         db.commit()
         print(f"Successfully seeded {successful_count} articulation agreements")
     except Exception as e:
         db.rollback()
         print(f"Error seeding articulations: {str(e)}")
+        raise e  # Re-raise to see the full traceback

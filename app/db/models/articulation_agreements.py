@@ -1,7 +1,11 @@
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, String, Enum
 from sqlalchemy.orm import relationship
 from app.db.connection import Base
+import enum
 
+class ArticulationRelationshipType(enum.Enum):  # Changed name to be more specific
+    AND = "AND"  
+    OR = "OR"    
 
 class ArticulationAgreements(Base):
     __tablename__ = "articulation_agreements"
@@ -11,8 +15,12 @@ class ArticulationAgreements(Base):
     university_course_id = Column(Integer, ForeignKey("university_courses.id"), nullable=False)
     university_id = Column(Integer, ForeignKey("universities.id"), nullable=False)
     major_id = Column(Integer, ForeignKey("majors.id"), nullable=False)
+    
+    # Add these new fields
+    group_id = Column(String, nullable=False, default="default")  # To group related articulations
+    relationship_type = Column(Enum(ArticulationRelationshipType), nullable=False, default=ArticulationRelationshipType.OR)
 
-    # Relationships
+    # Relationships (unchanged)
     community_college_course = relationship("Courses", back_populates="articulations")
     university_course = relationship("UniversityCourses", back_populates="articulations")
     university = relationship("Universities", back_populates="articulations")
