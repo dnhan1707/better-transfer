@@ -207,7 +207,7 @@ def db_get_prerequisite_relationships_for_college(db: Session, college_id: int):
         PrerequisiteCourse.code.label("prerequisite_code")
     ).join(
         Prerequisites,
-        Courses.id == Prerequisites.id
+        Courses.id == Prerequisites.course_id
     ).join(
         PrerequisiteCourse,
         Prerequisites.prerequisite_course_id == PrerequisiteCourse.id
