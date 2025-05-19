@@ -5,7 +5,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.connection import SessionLocal
-from app.services.prerequisite_graph import build_prerequisite_graph
+from app.services.prerequisite_graph import build_prerequisite_graph, plan_course_sequence, topological_sort
 
 def main():
     """Main function to seed the database"""
@@ -17,6 +17,12 @@ def main():
             print(prerequisite_graph)
             print("======================================")
             print(leads_to)
+            print("======================================")
+
+            sorted_course = topological_sort(prerequisite_graph)
+            planned_course = plan_course_sequence(sorted_course, 6, prerequisite_graph)
+            print(planned_course)
+        
         else:
             print("Error: build_prerequisite_graph did not return a tuple of length 2.")
     finally:
