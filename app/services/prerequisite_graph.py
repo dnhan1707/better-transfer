@@ -1,4 +1,5 @@
 from app.db.crud.articulations import db_get_prerequisite_relationships_for_college
+from app.db.models.courses import Courses
 from sqlalchemy.orm import Session
 import math
 import re
@@ -11,21 +12,20 @@ Data Structure: Directed Acyclic Graph
 
 def build_prerequisite_graph(db: Session, college_id: int):
     prerequisite_relationships = db_get_prerequisite_relationships_for_college(db, college_id)
+    all_courses = db.query(Courses).filter(Courses.college_id == college_id)
     prerequisite_graph = {}  # course -> prerequisites
     leads_to = {}  # prerequisite -> courses allowed to take after
 
+    for course in all_courses:
+        prerequisite_graph[course.code] = []
+        leads_to[course.code] = []
+
     for rel in prerequisite_relationships:
-        # Add to prerequisite graph
-        if rel.course_code not in prerequisite_graph:
-            prerequisite_graph[rel.course_code] = []
         prerequisite_graph[rel.course_code].append({
             "code": rel.prerequisite_code,
             "type": rel.prerequisite_type
         })
 
-        # Add to leads_to graph 
-        if rel.prerequisite_code not in leads_to:
-            leads_to[rel.prerequisite_code] = []
         leads_to[rel.prerequisite_code].append({
             "code": rel.course_code,
             "type": rel.prerequisite_type
