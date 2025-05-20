@@ -84,9 +84,17 @@ def simplified_articulation_group(
         
         # Process the articulation groups to build the requirement tree
         if articulation_groups and len(articulation_groups) > 0:
-            # Take the first group's expression as the root
-            main_group = articulation_groups[0]
-            college_uni_agreement["requirementTree"] = process_expression(main_group.expression, course_mappings)
+            if len(articulation_groups) == 1:
+                # Just one group, use it directly
+                main_group = articulation_groups[0]
+                college_uni_agreement["requirementTree"] = process_expression(main_group.expression, course_mappings)
+            else:
+                # Multiple groups - combine them into a single AND expression
+                combined_expression = {
+                    "operator": "AND",
+                    "groups": [group.expression for group in articulation_groups]
+                }
+                college_uni_agreement["requirementTree"] = process_expression(combined_expression, course_mappings)
         
         return college_uni_agreement
     except Exception as e:
