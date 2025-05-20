@@ -6,7 +6,7 @@ from app.db.seeders.seed_majors import seed_majors
 from app.db.seeders.seed_universities_courses import seed_universities_courses
 from app.db.seeders.seed_articulations import seed_articulations
 from app.db.seeders.seed_prerequisites import seed_prerequisite
-from app.db.seeders.seed_articulation_group import seed_articulation_group
+from app.db.seeders.seed_articulation_group import seed_articulation_groups
 
 
 def run_all_seeder(db: Session):
@@ -19,8 +19,8 @@ def run_all_seeder(db: Session):
     # seed_majors(db)       
     # seed_courses(db)      
     # seed_universities_courses(db)  
-    seed_articulations(db)  
+    # seed_articulations(db)  
     # seed_prerequisite(db)
-    # seed_articulation_group(db)
+    seed_articulation_groups(db)
     print("Database seeding complete!")
     # print("Database is fully added")

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.db.connection import Base
 import enum
 
-class ArticulationRelationshipType(enum.Enum):  # Changed name to be more specific
+class ArticulationRelationshipType(enum.Enum):
     AND = "AND"  
     OR = "OR"    
 
@@ -16,11 +16,11 @@ class ArticulationAgreements(Base):
     university_id = Column(Integer, ForeignKey("universities.id"), nullable=False)
     major_id = Column(Integer, ForeignKey("majors.id"), nullable=False)
     
-    # Add these new fields
+    # Relation to expression structure
     group_id = Column(String, nullable=False, default="default")  # To group related articulations
     relationship_type = Column(Enum(ArticulationRelationshipType), nullable=False, default=ArticulationRelationshipType.OR)
 
-    # Relationships (unchanged)
+    # Relationships
     community_college_course = relationship("Courses", back_populates="articulations")
     university_course = relationship("UniversityCourses", back_populates="articulations")
     university = relationship("Universities", back_populates="articulations")

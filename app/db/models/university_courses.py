@@ -17,3 +17,4 @@ class UniversityCourses(Base):
     # New relationship to CourseMajorMapping
     major_mappings = relationship("CourseMajorMapping", back_populates="university_course")
     articulations = relationship("ArticulationAgreements", back_populates="university_course")
+    expression_nodes = relationship("ExpressionNode", back_populates="university_course")
