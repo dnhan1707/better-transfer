@@ -82,5 +82,19 @@
         "units": 4,
         "difficulty": 4,
         "college_name": "Pasadena City College"
+    },
+        {
+        "code": "CS 003B", 
+        "name": "Fundamental of Computer Science I (Java)",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
+    },
+    {
+        "code": "CS 006", 
+        "name": "Introduction to Applied Logic",
+        "units": 4,
+        "difficulty": 4,
+        "college_name": "Pasadena City College"
     }
   ]
