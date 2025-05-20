@@ -16,6 +16,7 @@ import app.db.models.articulation_agreements
 import app.db.models.course_major_mapping
 import app.db.models.prerequisites
 import app.db.models.articulation_group
+import app.db.models.expression_node
 
 
 from dotenv import load_dotenv
