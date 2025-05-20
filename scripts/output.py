@@ -14,13 +14,16 @@ def main():
         result = build_prerequisite_graph(db, 1)
         if isinstance(result, tuple) and len(result) == 2:
             prerequisite_graph, leads_to = result
+            print("==========PREREQUISITE GRAPH=============")
             print(prerequisite_graph)
-            print("======================================")
+            print("==========LEADS TO GRAPH==========")
             print(leads_to)
-            print("======================================")
-
+            print("==========TOPOLOGICAL SORT==============")
             sorted_course = topological_sort(prerequisite_graph)
-            planned_course = plan_course_sequence(sorted_course, 6, prerequisite_graph)
+            print(sorted_course)
+            print("==========TRANSFER PLAN==============")
+
+            planned_course = plan_course_sequence(sorted_course, 4, prerequisite_graph)
             print(planned_course)
         
         else:

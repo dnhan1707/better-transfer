@@ -74,7 +74,7 @@
     "university_name": "University of California, Los Angeles",
     "college": "Pasadena City College",
     "major_name": "Computer Science",
-    "university_course": "MATH 32B",
+    "university_course": "MATH 32A",
     "relationship_type": "OR",
     "community_college_courses": [
       { "code": "MATH 005C" }
