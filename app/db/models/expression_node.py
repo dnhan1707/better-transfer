@@ -33,4 +33,9 @@ class ExpressionNode(Base):
     )    
     parent_node = relationship("ExpressionNode", back_populates="child_nodes", remote_side=[id])
     child_nodes = relationship("ExpressionNode", back_populates="parent_node")
-    university_course = relationship("UniversityCourses", back_populates="expression_nodes")
+    university_course = relationship(
+        "UniversityCourses", 
+        back_populates="expression_nodes",
+        foreign_keys=[university_course_id],
+        viewonly=True  # This avoids the circular dependency issue
+    )

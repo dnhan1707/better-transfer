@@ -78,7 +78,9 @@ def plan_course_sequence(sorted_course, num_of_terms, prerequisite_graph):
     
     Goal:   Group courses into balanced terms while respecting prerequisites and diversifying subjects
     '''
-
+    if not sorted_course:
+        return [[] for _ in range(num_of_terms)]
+        
     max_course_per_term = math.ceil(len(sorted_course) / num_of_terms)
     terms = []
     completed_courses = set()
@@ -135,5 +137,60 @@ def plan_course_sequence(sorted_course, num_of_terms, prerequisite_graph):
         # If we couldn't add any courses, there may be a prerequisite cycle or other issue
         if not courses_added:
             break
+            
+    # Improved redistribution logic when we have fewer terms than requested
+    if terms and num_of_terms > len(terms):
+        # Flatten all courses while preserving order (important for prerequisites)
+        all_courses = []
+        for term in terms:
+            all_courses.extend(term)
+        
+        # We need a more intelligent distribution while respecting prerequisites
+        new_terms = [[] for _ in range(num_of_terms)]
+        available_courses = set()  # Courses that have all prerequisites met
+        placed_courses = set()  # Courses already placed in new terms
+        
+        # Initial available courses are those with no prerequisites
+        for course in all_courses:
+            prereqs = [p["code"] for p in prerequisite_graph.get(course, [])]
+            if not prereqs:
+                available_courses.add(course)
+        
+        # Distribute courses across terms
+        for term_idx in range(num_of_terms):
+            # Try to put roughly equal number of courses in each term
+            target_courses = len(all_courses) // num_of_terms
+            if term_idx < len(all_courses) % num_of_terms:
+                target_courses += 1
+                
+            # Add courses to this term
+            added_to_term = 0
+            
+            # First, add courses from available_courses (prerequisites satisfied)
+            available_list = list(available_courses - placed_courses)
+            for course in available_list:
+                if added_to_term >= target_courses:
+                    break
+                    
+                new_terms[term_idx].append(course)
+                placed_courses.add(course)
+                added_to_term += 1
+            
+            # Update available courses for next term
+            for course in all_courses:
+                if course not in placed_courses:
+                    prereqs = [p["code"] for p in prerequisite_graph.get(course, [])]
+                    if all(prereq in placed_courses for prereq in prereqs):
+                        available_courses.add(course)
+        
+        # Any remaining courses go in the last term
+        remaining = [c for c in all_courses if c not in placed_courses]
+        new_terms[-1].extend(remaining)
+        
+        terms = new_terms
     
-    return terms
+    # Ensure we have exactly num_of_terms terms
+    while len(terms) < num_of_terms:
+        terms.append([])
+    
+    return terms[:num_of_terms]  # Ensure we don't return more than requested
