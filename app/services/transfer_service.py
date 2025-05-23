@@ -53,7 +53,15 @@ class TransferPlanService:
     def get_college_name(db: Session, college_id: int):
         college = db_get_college_by_id(db, college_id)
         return college.college_name
+    
+    @staticmethod
+    def map_alternatives_cc_classes(uni_to_cc_map):
+        uni_course_alternatives = {}
+        for uni_course, cc_courses in uni_to_cc_map.items():
+            uni_course_alternatives[uni_course] = cc_courses
         
+        return uni_course_alternatives
+
     @staticmethod
     def simplified_articulation_group(db: Session, college_id: int, university_id: int, major_id: int):
         try:
@@ -95,9 +103,16 @@ class TransferPlanService:
         
         # Get courses to take and their details
         cc_courses_to_take = ArticulationService.get_courses_to_take(uni_to_cc_map)
+
+        # Also get all possible alternative courses
+        all_possible_courses = set(cc_courses_to_take)
+        for uni_course, cc_alternatives in uni_to_cc_map.items():
+            all_possible_courses.update(cc_alternatives)
+
+        # Query for all courses including alternatives
         courses = db.query(Courses).filter(
             Courses.college_id == college_id,
-            Courses.code.in_(cc_courses_to_take)
+            Courses.code.in_(all_possible_courses)
         ).all()
 
         course_details = TransferPlanService.extract_course_details(courses)
@@ -109,6 +124,11 @@ class TransferPlanService:
 
         # Create term plan
         term_plan = CourseSchedulingService.plan_course_sequence(sorted_courses, num_of_terms, prerequisite_graph)
+
+        uni_course_alternatives = TransferPlanService.map_alternatives_cc_classes(uni_to_cc_map)
+        print("===============================================")
+        print(f"University course alternatives: {uni_course_alternatives}")
+        print("===============================================")
 
         # Format the plan
         formatted_plan = {
@@ -127,19 +147,47 @@ class TransferPlanService:
             }
             
             for cc_course in term_courses:
+                # Get university courses this CC course satisfies
+                satisfies_uni_courses = cc_to_uni_map.get(cc_course, [])
+                
+                # Find alternatives for each university course this satisfies
+                alternatives = set()
+                for uni_course in satisfies_uni_courses:
+                    # Get all CC courses that satisfy this uni course
+                    alt_cc_courses = uni_course_alternatives.get(uni_course, [])
+                    
+                    # Remove the current course from alternatives
+                    course_alternatives = [alt for alt in alt_cc_courses if alt != cc_course]
+                    alternatives.update(course_alternatives)
+                
                 # Add course to the term plan with details
                 course_info = {
                     "code": cc_course,
                     "name": course_details.get(cc_course, {}).get("name", "Unknown Course"),
                     "units": course_details.get(cc_course, {}).get("units", 0),
-                    "satisfies_university_courses": cc_to_uni_map.get(cc_course, [])
+                    "satisfies_university_courses": satisfies_uni_courses
                 }
+                
+                # Add alternatives if they exist
+                if alternatives:
+                    # Get course details for alternatives to include names
+                    alternative_details = []
+                    for alt_code in alternatives:
+                        alt_detail = {
+                            "code": alt_code,
+                            "name": course_details.get(alt_code, {}).get("name", "Unknown Course"),
+                            "units": course_details.get(alt_code, {}).get("units", 0)
+                        }
+                        alternative_details.append(alt_detail)
+                    
+                    course_info["alternatives"] = alternative_details
+                
                 term_data["courses"].append(course_info)
                 completed_courses.add(cc_course)
             
             formatted_plan["term_plan"].append(term_data)
         
-        # Handle multiple entries for the same university course (keep only one per term)
+        # Handle multiple entries for the same university course
         StudentProgressService.consolidate_university_courses(formatted_plan)
         
-        return formatted_plan
+        return formatted_plan   

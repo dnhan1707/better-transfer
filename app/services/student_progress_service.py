@@ -44,7 +44,7 @@ class StudentProgressService:
     
     @staticmethod
     def consolidate_university_courses(plan):
-        """Ensure each university course appears only once in each term by removing duplicates."""
+        """Ensure each university course appears only once in each term while preserving alternatives."""
         for term_data in plan["term_plan"]:
             seen_uni_courses = set()
             filtered_courses = []
@@ -58,7 +58,8 @@ class StudentProgressService:
                             unique_uni_courses.append(uni_course)
                             seen_uni_courses.add(uni_course)
                     
-                    if unique_uni_courses:
+                    # Keep the course if it has unique uni courses OR alternatives
+                    if unique_uni_courses or ("alternatives" in course and course["alternatives"]):
                         course_copy = course.copy()
                         course_copy["satisfies_university_courses"] = unique_uni_courses
                         filtered_courses.append(course_copy)
@@ -66,3 +67,25 @@ class StudentProgressService:
                     filtered_courses.append(course)
             
             term_data["courses"] = filtered_courses
+            """Ensure each university course appears only once in each term by removing duplicates."""
+            for term_data in plan["term_plan"]:
+                seen_uni_courses = set()
+                filtered_courses = []
+                
+                for course in term_data["courses"]:
+                    if "satisfies_university_courses" in course:
+                        # Filter out duplicate university courses
+                        unique_uni_courses = []
+                        for uni_course in course["satisfies_university_courses"]:
+                            if uni_course not in seen_uni_courses:
+                                unique_uni_courses.append(uni_course)
+                                seen_uni_courses.add(uni_course)
+                        
+                        if unique_uni_courses:
+                            course_copy = course.copy()
+                            course_copy["satisfies_university_courses"] = unique_uni_courses
+                            filtered_courses.append(course_copy)
+                    else:
+                        filtered_courses.append(course)
+                
+                term_data["courses"] = filtered_courses
