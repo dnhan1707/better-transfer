@@ -3,12 +3,6 @@ from app.db.models.articulation_agreements import ArticulationAgreements
 from app.db.models.articulation_group import ArticulationGroup
 from app.db.models.courses import Courses
 from app.db.models.university_courses import UniversityCourses
-from app.db.models.universities import Universities
-from app.db.models.majors import Majors
-from app.db.models.colleges import Colleges
-from app.db.models.prerequisites import Prerequisites
-from sqlalchemy.orm import aliased
-
 
 def db_get_articulation_groups(db: Session, college_id: int, university_id: int, major_id: int):
     """
@@ -50,35 +44,16 @@ def db_get_articulation_groups(db: Session, college_id: int, university_id: int,
         print(f"Error retrieving articulation groups: {str(e)}")
         raise
 
-def db_get_university_by_id(db: Session,  university_id: int):
-    university = db.query(Universities).filter(
-        Universities.id == university_id
-    ).first()
-
-    return university
-
-def db_get_major_by_id(db: Session,  major_id: int):
-    major = db.query(Majors).filter(
-        Majors.id == major_id
-    ).first()
-
-    return major
-
-def db_get_college_by_id(db: Session,  college_id: int):
-    college = db.query(Colleges).filter(
-        Colleges.id == college_id
-    ).first()
-
-    return college
-
-def db_get_university_courses(db: Session, university_id: int):
-    return db.query(UniversityCourses).filter(
-        UniversityCourses.university_id == university_id
+def db_get_articulation_group_filtered(db: Session, college_id: int, university_id: int, major_id: int):
+    """Get filtered articulation groups."""
+    return db.query(ArticulationGroup).filter(
+        ArticulationGroup.university_id == university_id,
+        ArticulationGroup.major_id == major_id,
+        ArticulationGroup.college_id == college_id
     ).all()
 
 def db_get_course_articulations(db: Session, college_id: int, university_id: int):
-    # Get all course articulations between a college and university
-
+    """Get all course articulations between a college and university."""
     return db.query(
         ArticulationAgreements,
         UniversityCourses,
@@ -94,15 +69,8 @@ def db_get_course_articulations(db: Session, college_id: int, university_id: int
         UniversityCourses.university_id == university_id
     ).all()
 
-def db_get_university_course_by_code(db: Session, university_id: int, course_code: str):
-    """Get a university course by its code"""
-    return db.query(UniversityCourses).filter(
-        UniversityCourses.university_id == university_id,
-        UniversityCourses.course_code == course_code
-    ).first()
-
 def db_get_cc_courses_for_uni_course(db: Session, university_course_id: int, college_id: int):
-    """Get all community college courses that articulate to a university course"""
+    """Get all community college courses that articulate to a university course."""
     return db.query(Courses).join(
         ArticulationAgreements,
         ArticulationAgreements.community_college_course_id == Courses.id
@@ -112,7 +80,7 @@ def db_get_cc_courses_for_uni_course(db: Session, university_course_id: int, col
     ).all()
 
 def db_get_cc_courses_with_relationships(db: Session, university_id: int, college_id: int):
-    """Get community college courses grouped by university course with relationship types"""
+    """Get community college courses grouped by university course with relationship types."""
     try:
         # Get all articulations
         articulations = db.query(
@@ -155,14 +123,7 @@ def db_get_cc_courses_with_relationships(db: Session, university_id: int, colleg
 
 def db_get_cc_course_relationships_for_expression(db: Session, university_id: int, college_id: int, university_course_codes: list):
     """
-    Get relationships between community college courses for specific university courses
-    
-    Returns:
-        Dict mapping university course codes to:
-            {
-                "relationship_type": "AND" or "OR",
-                "community_college_courses": [{"code": "CS 001", "name": "Intro to CS"}]
-            }
+    Get relationships between community college courses for specific university courses.
     """
     # Filter to only include the courses we need for this expression
     articulations = db.query(
@@ -198,19 +159,3 @@ def db_get_cc_course_relationships_for_expression(db: Session, university_id: in
         })
     
     return result
-
-def db_get_prerequisite_relationships_for_college(db: Session, college_id: int):
-    PrerequisiteCourse = aliased(Courses)
-    return db.query(
-        Courses.code.label("course_code"),
-        Prerequisites.prerequisite_type,
-        PrerequisiteCourse.code.label("prerequisite_code")
-    ).join(
-        Prerequisites,
-        Courses.id == Prerequisites.course_id
-    ).join(
-        PrerequisiteCourse,
-        Prerequisites.prerequisite_course_id == PrerequisiteCourse.id
-    ).filter(
-        Courses.college_id == college_id
-    ).all()
