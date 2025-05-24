@@ -1,0 +1,15 @@
+services:
+  timescaledb:
+    image: timescale/timescaledb-ha:pg16
+    container_name: timescaledb
+    environment:
+      - POSTGRES_DB=rag-database
+      - POSTGRES_PASSWORD=nhancho1707
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  timescaledb_data:
