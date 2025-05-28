@@ -8,3 +8,10 @@ python-jose==3.3.0
 passlib==1.7.4
 bcrypt==4.0.1
 alembic==1.12.1
+pandas
+openai
+psycopg
+python-dotenv
+timescale-vector
+instructor
+anthropic
