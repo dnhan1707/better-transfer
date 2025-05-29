@@ -91,7 +91,7 @@ class KnowledgeChunker:
         return chunks
     
     @staticmethod
-    async def generate_prerequisite_chunk(db: Session) -> List[Dict[str, Any]]:
+    async def generate_prerequisite_chunker(db: Session) -> List[Dict[str, Any]]:
         chunks = []
 
         prerequisites = db.query(
@@ -99,7 +99,7 @@ class KnowledgeChunker:
             Courses.code.label("course_code"),
             Courses.name.label("course_name"),
             Colleges.college_name,
-            Colleges.label.id("college_id")
+            Colleges.id.label("college_id")
         ).join(
             Courses,
             Prerequisites.course_id == Courses.id
@@ -129,37 +129,4 @@ class KnowledgeChunker:
             })
         
         return chunks
-    
-    @staticmethod
-    async def store_chunks(db: Session, chunks: List[Dict[str, Any]], instruction: str) -> None:
-        texts = [chunk["content"] for chunk in chunks]
-        embedding_service = EmbeddingService(instruction) 
-
-        embeddings = embedding_service.batch_create_embedding(texts)
-
-        # Insert into database
-        for i, chunk in enumerate(chunks):
-            embedding = embeddings[i]
-
-            db.execute(
-                """
-                INSERT INTO rag-database
-                (content, embedding, college_id, university_id, major_id, chunk_type) 
-                VALUES (:content, :embedding, :college_id, :college_name, :university_id, :university_name, :major_id, :major_name, :chunk_type)
-                """,
-                {
-                    "content": chunk["content"],
-                    "embedding": embedding,
-                    "college_id": chunk.get("college_id"),
-                    "college_name": chunk.get("college_name"),
-                    "university_id": chunk.get("university_id"),
-                    "university_name": chunk.get("university_name"),
-                    "major_id": chunk.get("major_id"), 
-                    "major_name": chunk.get("major_name"), 
-                    "chunk_type": chunk["chunk_type"]
-                }
-            )
-
-        db.commit()
-        
 

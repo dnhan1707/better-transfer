@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 from app.db.connection import Base
+from app.db.models.expression_node import ExpressionNode
 
 class ArticulationGroup(Base):
     __tablename__ = "articulation_group"
