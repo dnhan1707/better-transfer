@@ -1,10 +1,9 @@
-from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import Dict, Any, List
 
 class VectorStore:
     @staticmethod
-    def create_vector_table(db: Session):
+    def create_vector_table(db):
         db.execute(
             text("""
             CREATE EXTENSION IF NOT EXISTS vector;
@@ -28,8 +27,8 @@ class VectorStore:
         db.commit()
 
     @staticmethod
-    def insert_chunk(db: Session, chunk: Dict[str, Any], embedding: list[float]):
-        # Insert one chunk
+    def insert_chunk(db, chunk: Dict[str, Any], embedding: List[float]):
+        """Insert a single chunk with embedding into the vector database"""
         db.execute(
             text("""
             INSERT INTO knowledge_chunks
@@ -48,12 +47,13 @@ class VectorStore:
                 "university_name": chunk.get("university_name"),
                 "major_id": chunk.get("major_id"),
                 "major_name": chunk.get("major_name"),
-                "chunk_type": chunk.get("chunk_type"),
+                "chunk_type": chunk.get("chunk_type", "general"),
             }
         )
+        db.commit()
 
     @staticmethod
-    def insert_chunks(db: Session, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
+    def insert_chunks(db, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
         # Insert multiple chunks
         for i, chunk in enumerate(chunks):
             VectorStore.insert_chunk(db, chunk, embeddings[i])

@@ -1,25 +1,30 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
 
-
 load_dotenv()
 
-DATABASE_URL =  os.getenv("DATABASE_URL")
+# Application database
+DATABASE_URL = os.getenv("DATABASE_URL")
+app_engine = create_engine(DATABASE_URL)
+AppSession = sessionmaker(autocommit=False, autoflush=False, bind=app_engine)
 
-
-#SQLAlchemy engine and session setup
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-Base = declarative_base()
+# Vector database for RAG
+RAG_DATABASE_URL = os.getenv("RAG_DATABASE_URL")
+vector_engine = create_engine(RAG_DATABASE_URL)
+VectorSession = sessionmaker(autocommit=False, autoflush=False, bind=vector_engine)
 
 def get_db():
-    db = SessionLocal()
+    db = AppSession()
     try:
-        yield db
+        return db
+    finally:
+        db.close()
+
+def get_vector_db():
+    db = VectorSession()
+    try:
+        return db
     finally:
         db.close()
