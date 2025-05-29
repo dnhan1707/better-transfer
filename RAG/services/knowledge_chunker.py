@@ -9,7 +9,6 @@ from app.db.models import (
     Prerequisites
 )
 from typing import List, Dict, Any
-from RAG.services.embedding_services import EmbeddingService
 
 class KnowledgeChunker:
 
@@ -93,13 +92,19 @@ class KnowledgeChunker:
     @staticmethod
     async def generate_prerequisite_chunker(db: Session) -> List[Dict[str, Any]]:
         chunks = []
-
+        
+        # Create an alias for the second join to Courses
+        from sqlalchemy.orm import aliased
+        PrereqCourse = aliased(Courses)
+        
         prerequisites = db.query(
             Prerequisites,
             Courses.code.label("course_code"),
             Courses.name.label("course_name"),
             Colleges.college_name,
-            Colleges.id.label("college_id")
+            Colleges.id.label("college_id"),
+            PrereqCourse.code.label("prereq_code"),  # Use the alias
+            PrereqCourse.name.label("prereq_name")   # Use the alias
         ).join(
             Courses,
             Prerequisites.course_id == Courses.id
@@ -107,11 +112,11 @@ class KnowledgeChunker:
             Colleges,
             Courses.college_id == Colleges.id
         ).join(
-            Courses,
-            Prerequisites.prerequisite_course_id == Courses.id,
-            aliased=True
+            PrereqCourse,  # Join with the alias
+            Prerequisites.prerequisite_course_id == PrereqCourse.id
         ).all()
-
+        
+        # Rest of your code remains the same
         for prereq, course_code, course_name, college_name, college_id, prereq_code, prereq_name in prerequisites:
             # Build prerequisite description
             prereq_type = "required" if prereq.prerequisite_type == "REQUIRED" else "recommended"
@@ -129,4 +134,3 @@ class KnowledgeChunker:
             })
         
         return chunks
-
