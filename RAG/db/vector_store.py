@@ -61,3 +61,7 @@ class VectorStore:
         db.commit()
         
 
+    @staticmethod
+    def vector_search(db):
+        pass
+

@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
 
@@ -14,6 +15,8 @@ AppSession = sessionmaker(autocommit=False, autoflush=False, bind=app_engine)
 RAG_DATABASE_URL = os.getenv("RAG_DATABASE_URL")
 vector_engine = create_engine(RAG_DATABASE_URL)
 VectorSession = sessionmaker(autocommit=False, autoflush=False, bind=vector_engine)
+Base = declarative_base()
+
 
 def get_db():
     db = AppSession()
