@@ -1,24 +1,27 @@
-from InstructorEmbedding import INSTRUCTOR
-from typing import List
-import torch
+import openai
+from typing import List, Dict, Any
+import os
+from dotenv import load_dotenv
+from sqlalchemy.orm import Session
+from app.db.connection import get_db
+
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
+    raise ValueError("OPENAI_API_KEY environment variable not set")
 
 class EmbeddingService:
-    def __init__(self, instruction: str):
-        self.model = INSTRUCTOR('hkunlp/instructor-xl')
-        self.instruction = instruction
-
-    async def batch_create_embedding(self, texts: List[str]) -> List[List[float]]:
+    
+    @staticmethod
+    async def batch_create_embedding(texts: List[str]) -> List[List[float]]:
         try:
-            instruction_text_pair = [[self.instruction, text] for text in texts]
-            batch_size = 32
-            embeddings = []
-            for i in range(0, len(instruction_text_pair), batch_size):
-                batch = instruction_text_pair[i: i + batch_size]
-                with torch.no_grad():
-                    embedding = self.model.encode(batch)
-                    embeddings.extend([emb.tolist() for emb in embedding])
+            response = await openai.embeddings.create(
+                input=texts,
+                model="text-embedding-3-small"
+            )
+            return [item["embedding"] for item in response["data"]]
+
             
-            return embeddings
         except Exception as e:
             print(f"Error creating batch embeddings: {e}")
             raise
