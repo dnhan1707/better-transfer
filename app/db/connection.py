@@ -10,6 +10,7 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 app_engine = create_engine(DATABASE_URL)
 AppSession = sessionmaker(autocommit=False, autoflush=False, bind=app_engine)
+SessionLocal = AppSession
 
 # Vector database for RAG
 RAG_DATABASE_URL = os.getenv("RAG_DATABASE_URL")
