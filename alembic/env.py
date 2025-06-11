@@ -31,7 +31,7 @@ config = context.config
 
 
 # Override the sqlalchemy.url with the DATABASE_URL from .env
-config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", "postgresql://postgres:nhancho1707@localhost:5432/better-transfer"))
+config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL", "postgresql://postgres:nhancho1707@localhost:5432/better_transfer"))
 
 
 # Interpret the config file for Python logging.

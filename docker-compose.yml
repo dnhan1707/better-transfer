@@ -3,14 +3,15 @@ services:
     image: pgvector/pgvector:pg17
     container_name: pgvector
     environment:
-      - POSTGRES_DB=postgres  
+      - POSTGRES_DB=vector_db  
       - POSTGRES_PASSWORD=nhancho1707
-      - POSTGRES_INITDB_ARGS=--data-checksums  #
     ports:
-      - "5433:5432"  
+      - "5432:5432"  
     volumes:
       - pgvector_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d 
+    command: >
+      -c port=5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
