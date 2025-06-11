@@ -1,5 +1,6 @@
 from sqlalchemy import text
 from typing import Dict, Any, List
+from RAG.services.embedding_services import EmbeddingService
 
 class VectorStore:
     @staticmethod
@@ -60,8 +61,55 @@ class VectorStore:
 
         db.commit()
         
-
     @staticmethod
-    def vector_search(db):
-        pass
-
+    async def vector_search(db, input_text: str, limit=5):
+        """
+        Search for similar content using vector similarity
+        
+        Args:
+            db: Database session
+            input_text: Query text to search for
+            limit: Maximum number of results to return
+            
+        Returns:
+            List of dictionaries containing search results with similarity scores
+        """
+        embedding_service = EmbeddingService()
+        embedded_text = await embedding_service.create_embedding(input_text)
+        
+        # Use the <=> operator for cosine distance (lower is more similar)
+        results = db.execute(
+            text("""
+            SELECT 
+                id,
+                content, 
+                college_name, 
+                university_name, 
+                major_name, 
+                chunk_type,
+                1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+            FROM 
+                knowledge_chunks
+            ORDER BY 
+                embedding <=> CAST(:query_embedding AS vector)
+            LIMIT :limit
+            """),
+            {
+                "query_embedding": embedded_text,
+                "limit": limit
+            }
+        ).fetchall()
+        
+        # Convert results to a list of dictionaries
+        return [
+            {
+                "id": row[0],
+                "content": row[1],
+                "college_name": row[2],
+                "university_name": row[3],
+                "major_name": row[4],
+                "chunk_type": row[5],
+                "similarity": row[6]
+            }
+            for row in results
+        ]
