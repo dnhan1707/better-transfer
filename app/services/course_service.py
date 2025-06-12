@@ -1,11 +1,15 @@
 from app.services.prerequisite_service import PrerequisiteService
+from app.db.models.courses import Courses
+from sqlalchemy.orm import Session
+
 import math
 
 class CourseSchedulingService:
     """Service for scheduling courses across terms while respecting prerequisites."""
-    
-    @staticmethod
-    def create_initial_term_distribution(subject_queues, max_course_per_term, prerequisite_graph, completed_courses):
+    def __init__(self):
+        self.prerequisite_service = PrerequisiteService()
+
+    def create_initial_term_distribution(self, subject_queues, max_course_per_term, prerequisite_graph, completed_courses):
         """Create an initial distribution of courses across terms."""
         current_term = []
         term_subjects = set()
@@ -18,7 +22,7 @@ class CourseSchedulingService:
                 
             # Find first course whose prerequisites are satisfied
             for i, course in enumerate(queue):
-                if PrerequisiteService.has_prerequisites_satisfied(course, completed_courses, prerequisite_graph):
+                if self.prerequisite_service.has_prerequisites_satisfied(course, completed_courses, prerequisite_graph):
                     if len(current_term) < max_course_per_term and subject not in term_subjects:
                         current_term.append(course)
                         term_subjects.add(subject)
@@ -31,7 +35,7 @@ class CourseSchedulingService:
             i = 0
             while i < len(queue) and len(current_term) < max_course_per_term:
                 course = queue[i]
-                if PrerequisiteService.has_prerequisites_satisfied(course, completed_courses, prerequisite_graph):
+                if self.prerequisite_service.has_prerequisites_satisfied(course, completed_courses, prerequisite_graph):
                     current_term.append(course)
                     queue.pop(i)
                     courses_added = True
@@ -40,8 +44,7 @@ class CourseSchedulingService:
         
         return current_term, completed_courses.union(current_term), courses_added
     
-    @staticmethod
-    def update_available_courses(all_courses, placed_courses, available_courses, prerequisite_graph):
+    def update_available_courses(self, all_courses, placed_courses, available_courses, prerequisite_graph):
         """Update the set of available courses based on which prerequisites have been satisfied."""
         for course in all_courses:
             if course not in placed_courses:
@@ -49,8 +52,7 @@ class CourseSchedulingService:
                 if all(prereq in placed_courses for prereq in prereqs):
                     available_courses.add(course)
     
-    @staticmethod
-    def redistribute_courses(all_courses, num_of_terms, prerequisite_graph):
+    def redistribute_courses(self, all_courses, num_of_terms, prerequisite_graph):
         """Redistribute courses across terms while respecting prerequisites."""
         new_terms = [[] for _ in range(num_of_terms)]
         available_courses = set()  # Courses that have all prerequisites met
@@ -83,7 +85,7 @@ class CourseSchedulingService:
                 added_to_term += 1
             
             # Update available courses for next term
-            CourseSchedulingService.update_available_courses(all_courses, placed_courses, available_courses, prerequisite_graph)
+            self.update_available_courses(all_courses, placed_courses, available_courses, prerequisite_graph)
         
         # Any remaining courses go in the last term
         remaining = [c for c in all_courses if c not in placed_courses]
@@ -91,8 +93,7 @@ class CourseSchedulingService:
         
         return new_terms
     
-    @staticmethod
-    def plan_course_sequence(sorted_courses, num_of_terms, prerequisite_graph):
+    def plan_course_sequence(self, sorted_courses, num_of_terms, prerequisite_graph):
         """Group courses into balanced terms while respecting prerequisites and diversifying subjects."""
         if not sorted_courses:
             return [[] for _ in range(num_of_terms)]
@@ -102,14 +103,14 @@ class CourseSchedulingService:
         completed_courses = set()
         
         # Group courses by subject
-        subject_courses = PrerequisiteService.group_courses_by_subject(sorted_courses)
+        subject_courses = self.prerequisite_service.group_courses_by_subject(sorted_courses)
         
         # Create a queue of courses for each subject (maintaining topological order)
         subject_queues = {subject: courses.copy() for subject, courses in subject_courses.items()}
         
         # Distribute courses across terms
         while any(len(queue) > 0 for queue in subject_queues.values()):
-            current_term, completed_courses, courses_added = CourseSchedulingService.create_initial_term_distribution(
+            current_term, completed_courses, courses_added = self.create_initial_term_distribution(
                 subject_queues, max_course_per_term, prerequisite_graph, completed_courses
             )
             
@@ -128,10 +129,36 @@ class CourseSchedulingService:
                 all_courses.extend(term)
             
             # Redistribute courses across the requested number of terms
-            terms = CourseSchedulingService.redistribute_courses(all_courses, num_of_terms, prerequisite_graph)
+            terms = self.redistribute_courses(all_courses, num_of_terms, prerequisite_graph)
         
         # Ensure we have exactly num_of_terms terms
         while len(terms) < num_of_terms:
             terms.append([])
         
         return terms[:num_of_terms]  # Ensure we don't return more than requested
+    
+    def extract_course_details(self, courses):
+        """Extract details like units and name from course objects."""
+        course_details = {}
+        for course in courses:
+            course_details[course.code] = {
+                "units": course.units,
+                "name": course.name
+            } 
+        return course_details
+    
+    def get_course_alternatives(self, cc_course, satisfies_uni_courses, uni_course_alternatives):
+        """Find alternative courses for a given CC course."""
+        alternatives = set()
+        for uni_course in satisfies_uni_courses:
+            alt_cc_courses = uni_course_alternatives.get(uni_course, [])
+            course_alternatives = [alt for alt in alt_cc_courses if alt != cc_course]
+            alternatives.update(course_alternatives)
+        return alternatives
+
+    def prepare_course_sequence(self, db: Session, college_id: int, cc_courses_to_take):
+        """Build prerequisite graph and sort courses."""
+        prerequisite_graph, _ = self.prerequisite_service.build_prerequisite_graph(db, college_id)
+        sorted_courses = self.prerequisite_service.topological_sort(prerequisite_graph)
+        sorted_courses = [c for c in sorted_courses if c in cc_courses_to_take]
+        return prerequisite_graph, sorted_courses

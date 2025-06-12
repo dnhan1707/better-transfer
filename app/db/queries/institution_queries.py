@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from app.db.models.universities import Universities
 from app.db.models.majors import Majors
 from app.db.models.colleges import Colleges
+from app.schemas.transferPlanRequest import TransferPlanRequest
 
 def db_get_university_by_id(db: Session, university_id: int):
     """Get university details by ID."""
@@ -20,3 +21,14 @@ def db_get_college_by_id(db: Session, college_id: int):
     return db.query(Colleges).filter(
         Colleges.id == college_id
     ).first()
+
+
+def db_get_basic_info(db: Session, request: TransferPlanRequest):
+    college = db_get_college_by_id(db, request.college_id)
+    university = db_get_university_by_id(db, request.university_id)
+    major = db_get_major_by_id(db, request.major_id)
+    return {
+        "college": college,
+        "university": university,
+        "major": major
+    }

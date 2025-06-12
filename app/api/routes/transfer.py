@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from app.db.connection import get_db
 from app.services.transfer_service import TransferPlanService
+from app.schemas.transferPlanRequest import TransferPlanRequest
+
 
 transfer_plan_service = TransferPlanService()
 router = APIRouter(
@@ -11,15 +12,13 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.post("/")
 def transfer_plan(
-    college_id: int,
-    university_id: int,
-    major_id: int,
+    request: TransferPlanRequest,
     db: Session = Depends(get_db)
 ):
     try:
-        plan = transfer_plan_service.create_transfer_plan(db, college_id, university_id, major_id, num_of_terms=5)
+        plan = transfer_plan_service.create_transfer_plan(db, request)
         return plan
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
