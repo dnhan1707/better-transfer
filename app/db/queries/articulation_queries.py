@@ -3,8 +3,9 @@ from app.db.models.articulation_agreements import ArticulationAgreements
 from app.db.models.articulation_group import ArticulationGroup
 from app.db.models.courses import Courses
 from app.db.models.university_courses import UniversityCourses
+from app.schemas.transferPlanRequest import TransferPlanRequest
 
-def db_get_articulation_groups(db: Session, college_id: int, university_id: int, major_id: int):
+def db_get_articulation_groups(db: Session, request: TransferPlanRequest):
     """
     Returns all articulation groups for a specific college-university-major combination
     with additional metadata
@@ -13,9 +14,9 @@ def db_get_articulation_groups(db: Session, college_id: int, university_id: int,
         articulation_groups = (
             db.query(ArticulationGroup)
             .filter(
-                ArticulationGroup.college_id == college_id,
-                ArticulationGroup.university_id == university_id,
-                ArticulationGroup.major_id == major_id
+                ArticulationGroup.college_id == request.college_id,
+                ArticulationGroup.university_id == request.university_id,
+                ArticulationGroup.major_id == request.major_id
             )
             .all()
         )
@@ -44,12 +45,12 @@ def db_get_articulation_groups(db: Session, college_id: int, university_id: int,
         print(f"Error retrieving articulation groups: {str(e)}")
         raise
 
-def db_get_articulation_group_filtered(db: Session, college_id: int, university_id: int, major_id: int):
+def db_get_articulation_group_filtered(db: Session, request: TransferPlanRequest):
     """Get filtered articulation groups."""
     return db.query(ArticulationGroup).filter(
-        ArticulationGroup.university_id == university_id,
-        ArticulationGroup.major_id == major_id,
-        ArticulationGroup.college_id == college_id
+        ArticulationGroup.university_id == request.university_id,
+        ArticulationGroup.major_id == request.major_id,
+        ArticulationGroup.college_id == request.college_id
     ).all()
 
 def db_get_course_articulations(db: Session, college_id: int, university_id: int):

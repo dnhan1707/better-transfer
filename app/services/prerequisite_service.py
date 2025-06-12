@@ -6,8 +6,7 @@ import re
 class PrerequisiteService:
     """Service for handling course prerequisites and dependency graphs."""
     
-    @staticmethod
-    def build_prerequisite_graph(db: Session, college_id: int):
+    def build_prerequisite_graph(self, db: Session, college_id: int):
         """Build a graph representing course prerequisites."""
         prerequisite_relationships = db_get_prerequisite_relationships_for_college(db, college_id)
         all_courses = db.query(Courses).filter(Courses.college_id == college_id)
@@ -31,8 +30,7 @@ class PrerequisiteService:
 
         return prerequisite_graph, leads_to
     
-    @staticmethod
-    def topological_sort(prerequisite_graph):
+    def topological_sort(self, prerequisite_graph):
         """Sort courses so that prerequisites come before their dependent courses."""
         visited = set()
         temp_visited = set()
@@ -58,24 +56,21 @@ class PrerequisiteService:
         
         return res
     
-    @staticmethod
-    def get_subject(course_code):
+    def get_subject(self, course_code):
         """Extract the subject from a course code."""
         match = re.match(r"^(.*\D)\s*\d", course_code)
         return match.group(1).strip() if match else course_code
     
-    @staticmethod
-    def has_prerequisites_satisfied(course, completed_courses, prerequisite_graph):
+    def has_prerequisites_satisfied(self, course, completed_courses, prerequisite_graph):
         """Check if all prerequisites for a course have been completed."""
         prerequisites = [p["code"] for p in prerequisite_graph.get(course, [])]
         return all(prereq in completed_courses for prereq in prerequisites)
     
-    @staticmethod
-    def group_courses_by_subject(sorted_courses):
+    def group_courses_by_subject(self, sorted_courses):
         """Group courses by their subject area."""
         subject_courses = {}
         for course in sorted_courses:
-            subject = PrerequisiteService.get_subject(course)
+            subject = self.get_subject(course)
             if subject not in subject_courses:
                 subject_courses[subject] = []
             subject_courses[subject].append(course)
