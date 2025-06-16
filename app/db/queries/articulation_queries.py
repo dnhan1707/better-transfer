@@ -4,6 +4,8 @@ from app.db.models.articulation_group import ArticulationGroup
 from app.db.models.courses import Courses
 from app.db.models.university_courses import UniversityCourses
 from app.schemas.transferPlanRequest import TransferPlanRequest
+from typing import Optional
+
 
 def db_get_articulation_groups(db: Session, request: TransferPlanRequest):
     """
@@ -45,7 +47,7 @@ def db_get_articulation_groups(db: Session, request: TransferPlanRequest):
         print(f"Error retrieving articulation groups: {str(e)}")
         raise
 
-def db_get_articulation_group_filtered(db: Session, request: TransferPlanRequest):
+def db_get_articulation_group_filtered(db: Session, request: TransferPlanRequest) -> Optional[ArticulationGroup]:
     """Get filtered articulation groups."""
     return db.query(ArticulationGroup).filter(
         ArticulationGroup.university_id == request.university_id,

@@ -17,7 +17,7 @@ class TransferPlanService:
         self.articulation_service = ArticulationService()
         self.course_detail_service = CourseDetailService()
 
-    def create_transfer_plan(self, db: Session, request: TransferPlanRequest):
+    async def create_transfer_plan(self, db: Session, request: TransferPlanRequest):
         """Create a transfer plan for a student."""
         try:
             # Get basic information and articulation agreements

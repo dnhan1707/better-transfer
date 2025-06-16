@@ -5,21 +5,24 @@ from app.services.transfer_service import TransferPlanService
 from app.schemas.transferPlanRequest import TransferPlanRequest
 
 
-transfer_plan_service = TransferPlanService()
-router = APIRouter(
-    prefix="/transfer-plan",
-    tags=["Transfer Plan"]
-)
+def create_transfer_router() -> APIRouter:
+    transfer_plan_service = TransferPlanService()
+    router = APIRouter(
+        prefix="/transfer-plan",
+        tags=["Transfer Plan"]
+    )
 
 
-@router.post("/")
-def transfer_plan(
-    request: TransferPlanRequest,
-    db: Session = Depends(get_db)
-):
-    try:
-        plan = transfer_plan_service.create_transfer_plan(db, request)
-        return plan
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    @router.post("/")
+    async def transfer_plan(
+        request: TransferPlanRequest,
+        db: Session = Depends(get_db)
+    ):
+        try:
+            plan = await transfer_plan_service.create_transfer_plan(db, request)
+            return plan
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        
     
+    return router
