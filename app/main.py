@@ -1,23 +1,11 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from sqlalchemy import text
-from app.db.connection import get_db
-from app.api.routes import transfer
+from fastapi import FastAPI
+from app.api.routes.transfer import create_transfer_router
 
 
-app = FastAPI()
-app.include_router(transfer.router)
+def create_application() -> FastAPI:
+    app = FastAPI()
+    transfer_router = create_transfer_router()
+    app.include_router(transfer_router)
+    return app
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to Better Transfer API"}
-
-
-@app.get("/test-db")
-def test_db_connection(db: Session = Depends(get_db)):
-    try:
-        db.execute(text("SELECT 1"))
-        return {"message": "Database connection successful"}
-
-    except Exception as e:
-        return {"error": str(e)}
+app = create_application()
