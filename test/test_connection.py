@@ -1,31 +1,16 @@
-import sys
-import os
-
-# Add the root project directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from app.db.connection import get_vector_db
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
+import pytest
 
-def main():
-    db = get_vector_db()
+def test_db_connection(db):
     try:
-        print("Testing connection...")
         result = db.execute(text("SELECT 1")).fetchone()
-        print(f"Connection successful: {result}")
-        
-        # Check if PostgreSQL version supports pgvector
-        version = db.execute(text("SELECT version()")).fetchone()[0]
-        print(f"PostgreSQL version: {version}")
-        
-        # List available extensions
-        extensions = db.execute(text("SELECT * FROM pg_available_extensions")).fetchall()
-        print("Available extensions:")
-        for ext in extensions:
-            print(f"  {ext.name}: {ext.default_version}")
-            
-    finally:
-        db.close()
+        assert result[0] == 1
 
-if __name__ == "__main__":
-    main()
+    except SQLAlchemyError as e:
+        pytest.fail(f"Database connection failed: {e}")
+
+
+def test_pgvector_extension_available(db):
+    extensions = db.execute(text("SELECT name FROM pg_available_extensions WHERE name='vector'")).fetchall()
+    assert any(ext[0] == 'vector' for ext in extensions), "pgvector extension is not available"

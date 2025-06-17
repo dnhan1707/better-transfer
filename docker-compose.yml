@@ -3,8 +3,8 @@ services:
     image: pgvector/pgvector:pg17
     container_name: pgvector
     environment:
-      - POSTGRES_DB=vector_db  
-      - POSTGRES_PASSWORD=nhancho1707
+      - POSTGRES_DB=${PG_DB}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
     ports:
       - "5432:5432"  
     volumes:
