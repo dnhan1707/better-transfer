@@ -1,6 +1,7 @@
 from sqlalchemy import text
 from typing import Dict, Any, List
 from RAG.services.embedding_services import EmbeddingService
+from app.schemas.transferPlanRequest import TransferPlanRequest
 
 class VectorStore:
     @staticmethod
@@ -62,7 +63,7 @@ class VectorStore:
         db.commit()
         
     @staticmethod
-    async def vector_search(db, input_text: str, limit=5):
+    async def vector_search(db, input_text: str, transferRequest: TransferPlanRequest):
         """
         Search for similar content using vector similarity
         
@@ -76,7 +77,6 @@ class VectorStore:
         """
         embedding_service = EmbeddingService()
         embedded_text = await embedding_service.create_embedding(input_text)
-        
         # Use the <=> operator for cosine distance (lower is more similar)
         results = db.execute(
             text("""
@@ -90,13 +90,18 @@ class VectorStore:
                 1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
             FROM 
                 knowledge_chunks
+            WHERE 
+                college_id = :source_college
+                AND university_id = :target_university
+                AND major_id = :target_major
             ORDER BY 
                 embedding <=> CAST(:query_embedding AS vector)
-            LIMIT :limit
             """),
             {
                 "query_embedding": embedded_text,
-                "limit": limit
+                "source_college": transferRequest.college_id,
+                "target_university": transferRequest.university_id,
+                "target_major": transferRequest.major_id,
             }
         ).fetchall()
         

@@ -7,33 +7,25 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.db.connection import get_vector_db
 from RAG.db.vector_store import VectorStore
+from RAG.services.synthesizer import Synthesizer
 from app.schemas.transferPlanRequest import TransferPlanRequest
 
 async def main():
     """Test vector search functionality"""
     db = get_vector_db()
+    synthesizer = Synthesizer()
     try:
         # Sample query
         query = "What courses do I need to take in 4 terms at Pasadena City College to transfer to University of California, Los Angeles as a Computer Science major?"
         print(f"Searching for: '{query}'")
         transferRequest = TransferPlanRequest(college_id=1, university_id=1, major_id=1)
         # Perform vector search
-        results = await VectorStore.vector_search(db, query, transferRequest)
-        
+        vector_res = await VectorStore.vector_search(db, query, transferRequest)
+        result = await synthesizer.generate_response(question=query, vector_res=vector_res)
+
         # Display results
         print("\nSearch Results:")
-        print("-" * 80)
-        for i, result in enumerate(results, 1):
-            print(f"{i}. Similarity: {result['similarity']:.4f}")
-            if result['college_name']:
-                print(f"   College: {result['college_name']}")
-            if result['university_name']:
-                print(f"   University: {result['university_name']}")
-            if result['major_name']:
-                print(f"   Major: {result['major_name']}")
-            print(f"   Type: {result['chunk_type']}")
-            print(f"   Content: {result['content']}")
-            print("-" * 80)
+        print(result)
     finally:
         db.close()
 
