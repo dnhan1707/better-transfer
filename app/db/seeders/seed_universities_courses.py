@@ -4,12 +4,15 @@ from sqlalchemy.orm import Session
 from app.db.models.university_courses import UniversityCourses
 from app.db.models.universities import Universities
 from app.db.models.majors import Majors
-from app.db.models.course_major_mapping import CourseMajorMapping  # Add this import
+from app.db.models.course_major_mapping import CourseMajorMapping
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def seed_universities_courses(db: Session):
     data_count = db.query(UniversityCourses).count()
     if(data_count > 0):
-        print(f"Skipping seed UniversityCourses, {data_count} found in the model")
+        logger.info(f"Skipping seed UniversityCourses, {data_count} found in the model")
         return
     
     try:
@@ -31,13 +34,13 @@ def seed_universities_courses(db: Session):
         for course_data in universities_courses_data:
             # Skip if no university name
             if "university_name" not in course_data:
-                print("Warning: Missing university_name in course data, skipping")
+                logger.warning("Missing university_name in course data, skipping")
                 continue
                 
             # Extract university name
             university_name = course_data["university_name"]
             if university_name not in universities:
-                print(f"Warning: University '{university_name}' not found, skipping")
+                logger.warning(f"University '{university_name}' not found, skipping")
                 continue
                 
             # Get university ID
@@ -64,12 +67,12 @@ def seed_universities_courses(db: Session):
                         )
                         db.add(mapping)
                     else:
-                        print(f"Warning: Major '{major_name}' at '{university_name}' not found")
+                        logger.warning(f"Major '{major_name}' at '{university_name}' not found")
             else:
-                print(f"Warning: Missing or invalid majors array for {course_data['course_name']}")
+                logger.warning(f"Missing or invalid majors array for {course_data['course_name']}")
         
         db.commit()
-        print(f"Successfully seeded university courses with major mappings")
+        logger.info(f"Successfully seeded university courses with major mappings")
     except Exception as e:
         db.rollback()
-        print(f"Error seeding university courses: {str(e)}")
+        logger.error(f"Error seeding university courses: {str(e)}")

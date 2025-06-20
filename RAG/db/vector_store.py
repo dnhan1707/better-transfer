@@ -4,8 +4,10 @@ from RAG.services.embedding_services import EmbeddingService
 from app.schemas.transferPlanRequest import TransferPlanRequest
 
 class VectorStore:
-    @staticmethod
-    def create_vector_table(db):
+    def __init__(self):
+        pass
+        
+    async def create_vector_table(self, db):
         db.execute(
             text("""
             CREATE EXTENSION IF NOT EXISTS vector;
@@ -28,8 +30,7 @@ class VectorStore:
         )
         db.commit()
 
-    @staticmethod
-    def insert_chunk(db, chunk: Dict[str, Any], embedding: List[float]):
+    async def insert_chunk(self, db, chunk: Dict[str, Any], embedding: List[float]):
         """Insert a single chunk with embedding into the vector database"""
         db.execute(
             text("""
@@ -54,16 +55,14 @@ class VectorStore:
         )
         db.commit()
 
-    @staticmethod
-    def insert_chunks(db, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
+    async def insert_chunks(self, db, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
         # Insert multiple chunks
         for i, chunk in enumerate(chunks):
-            VectorStore.insert_chunk(db, chunk, embeddings[i])
+            await self.insert_chunk(db, chunk, embeddings[i])
 
         db.commit()
         
-    @staticmethod
-    async def vector_search(db, input_text: str, transferRequest: TransferPlanRequest):
+    async def vector_search(self, db, input_text: str, transferRequest: TransferPlanRequest):
         """
         Search for similar content using vector similarity
         
@@ -92,8 +91,6 @@ class VectorStore:
                 knowledge_chunks
             WHERE 
                 college_id = :source_college
-                AND university_id = :target_university
-                AND major_id = :target_major
             ORDER BY 
                 embedding <=> CAST(:query_embedding AS vector)
             """),

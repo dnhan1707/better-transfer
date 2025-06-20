@@ -4,6 +4,9 @@ from app.db.models.majors import Majors
 from app.db.models.colleges import Colleges
 from app.schemas.transferPlanRequest import TransferPlanRequest
 from typing import Dict, Optional, Any
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def db_get_university_by_id(db: Session, university_id: int) -> Optional[Universities]:
     """Get university details by ID."""
@@ -30,9 +33,9 @@ def db_get_basic_info(db: Session, request: TransferPlanRequest) -> Dict[str, An
         university = db_get_university_by_id(db, request.university_id)
         major = db_get_major_by_id(db, request.major_id)
         if(not college or not university or not major):
-            print(f"College {college}")
-            print(f"Universitty {university}")
-            print(f"Major {major}")
+            logger.error(f"College: {college}")
+            logger.error(f"University: {university}")
+            logger.error(f"Major: {major}")
             raise Exception
             
         return {
@@ -41,6 +44,6 @@ def db_get_basic_info(db: Session, request: TransferPlanRequest) -> Dict[str, An
             "major": major
         }
     except Exception:
-        print("Info not found")
+        logger.error("Info not found")
 
 

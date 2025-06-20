@@ -3,11 +3,14 @@ import json
 from sqlalchemy.orm import Session
 from app.db.models.majors import Majors
 from app.db.models.universities import Universities
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def seed_majors(db: Session):
     data_count = db.query(Majors).count()
     if(data_count > 0):
-        print(f"Skipping seed majors, {data_count} found in the model")
+        logger.info(f"Skipping seed majors, {data_count} found in the model")
         return
     
     try:
@@ -24,7 +27,7 @@ def seed_majors(db: Session):
             # Extract university name and look up ID
             university_name = major_data.pop("university_name")
             if university_name not in universities:
-                print(f"Warning: University '{university_name}' not found, skipping major")
+                logger.warning(f"University '{university_name}' not found, skipping major")
                 continue
                 
             # Create major with university ID
@@ -35,7 +38,7 @@ def seed_majors(db: Session):
             db.add(major)
         
         db.commit()
-        print(f"Successfully seeded {len(majors_data)} majors")
+        logger.info(f"Successfully seeded {len(majors_data)} majors")
     except Exception as e:
         db.rollback()
-        print(f"Error seeding majors: {str(e)}")
+        logger.error(f"Error seeding majors: {str(e)}")

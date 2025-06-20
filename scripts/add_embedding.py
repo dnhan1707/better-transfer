@@ -31,7 +31,7 @@ async def main():
     db = DockerSession()
     
     try:
-        vector_store.create_vector_table(db)  
+        await vector_store.create_vector_table(db)  
         count = await insert_vectors(db)
         print(f"Successfully inserted {count} vector chunks into the database")
 

@@ -15,22 +15,24 @@ async def extract_and_embed():
     """Extract data from application database and create embeddings in vector database"""
     app_db = get_db()
     vector_db = get_vector_db()
-    
+    vector_store = VectorStore()
+    knowledge_chunker = KnowledgeChunker()
+
     try:
         print("Creating vector table if it doesn't exist...")
-        VectorStore.create_vector_table(vector_db)
+        await vector_store.create_vector_table(vector_db)
         
         # Use KnowledgeChunker to generate detailed chunks
         print("Generating course chunks...")
-        course_chunks = await KnowledgeChunker.generate_course_chunker(app_db)
+        course_chunks = await knowledge_chunker.generate_course_chunker(app_db)
         print(f"Generated {len(course_chunks)} course chunks")
         
         print("Generating articulation chunks...")
-        articulation_chunks = await KnowledgeChunker.generate_articulation_chunker(app_db)
+        articulation_chunks = await knowledge_chunker.generate_articulation_chunker(app_db)
         print(f"Generated {len(articulation_chunks)} articulation chunks")
         
         print("Generating prerequisite chunks...")
-        prerequisite_chunks = await KnowledgeChunker.generate_prerequisite_chunker(app_db)
+        prerequisite_chunks = await knowledge_chunker.generate_prerequisite_chunker(app_db)
         print(f"Generated {len(prerequisite_chunks)} prerequisite chunks")
         
         # Combine all chunks
@@ -50,7 +52,7 @@ async def extract_and_embed():
             embeddings = await embedding_service.batch_create_embedding(contents)            
             print(f"Storing {len(batch)} embeddings...")
             for j, chunk in enumerate(batch):
-                VectorStore.insert_chunk(vector_db, chunk, embeddings[j])
+                await vector_store.insert_chunk(vector_db, chunk, embeddings[j])
                 
             total_processed += len(batch)
             print(f"Progress: {total_processed}/{len(all_chunks)}")

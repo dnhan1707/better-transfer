@@ -18,10 +18,11 @@ import app.db.models.prerequisites
 import app.db.models.articulation_group
 import app.db.models.expression_node
 
-
+from app.utils.logging_config import get_logger
 from dotenv import load_dotenv
 import os
 
+logger = get_logger(__name__)
 
 load_dotenv()
 
@@ -50,7 +51,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-print("Detected tables:", target_metadata.tables.keys())
+logger.debug("Detected tables:", target_metadata.tables.keys())
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

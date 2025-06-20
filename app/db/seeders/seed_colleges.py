@@ -2,13 +2,15 @@ import os
 import json
 from sqlalchemy.orm import Session
 from app.db.models.colleges import Colleges
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def seed_colleges(db: Session):
     # Check if colleges already exist
     data_count = db.query(Colleges).count()
     if(data_count > 0):
-        print(f"Skipping colleges seeding, {data_count} already exist in Colleges model")
+        logger.info(f"Skipping colleges seeding, {data_count} already exist in Colleges model")
         return
     
     try:
@@ -23,8 +25,8 @@ def seed_colleges(db: Session):
             db.add(college)
         
         db.commit()
-        print(f"Successfully seeded {len(colleges_data)} colleges")
+        logger.info(f"Successfully seeded {len(colleges_data)} colleges")
 
     except Exception as e:
         db.rollback()
-        print(f"Error seeding colleges: {str(e)}")
+        logger.error(f"Error seeding colleges: {str(e)}")

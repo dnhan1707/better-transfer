@@ -3,6 +3,9 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import json
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -13,9 +16,19 @@ class Synthesizer:
         self.model = "gpt-4o"
         self.SYSTEM_PROMPT = """
         You are an expert academic transfer advisor.
-        You will receive relevant context retrieved from a knowledge database and a proposed transfer plan.
-        Your job is to analyze and answer questions about the transfer plan.
-        The context is retrieved based on cosine similarity, so some information might be missing or irrelevant.
+
+        You will be given:
+        - Relevant context retrieved from a course articulation knowledge base
+
+        Important notes:
+        - The retrieved context may be incomplete or contain irrelevant details due to cosine similarity-based retrieval.
+        - Some courses have prerequisites that must be taken beforehand — always respect prerequisite chains.
+        - Some university course requirements may be satisfied by alternative courses — include all valid options.
+
+        Your goals:
+        1. Ensure a diverse mix of course types (e.g., STEM, GE, electives) in each term.
+        2. Balance the difficulty level across all terms as evenly as possible.
+        3. Maintain correct prerequisite ordering for all courses.
 
         **Important:**
         - Your response must be in the following JSON code format, matching the structure below:
@@ -61,7 +74,7 @@ class Synthesizer:
             ],
             response_format={"type": "json_object"}
         )
-        # print(response.choices[0].message.content)
+        logger.debug(response.choices[0].message.content)
         return response.choices[0].message.content
 
 

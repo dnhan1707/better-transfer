@@ -8,11 +8,14 @@ from app.db.models.colleges import Colleges
 from app.db.models.universities import Universities
 from app.db.models.majors import Majors
 from app.db.models.university_courses import UniversityCourses
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 def seed_articulations(db: Session):
     data_count = db.query(ArticulationAgreements).count()
     if(data_count > 0):
-        print(f"Skipping seed articulations, {data_count} found in the model")
+        logger.info(f"Skipping seed articulations, {data_count} found in the model")
         return
     
     try:
@@ -66,21 +69,21 @@ def seed_articulations(db: Session):
             
             # Look up IDs
             if uni_name not in universities:
-                print(f"Warning: University {uni_name} not found")
+                logger.warning(f"University {uni_name} not found")
                 continue
                 
             uni_id = universities[uni_name]
             
             major_key = f"{uni_name}_{major_name}"
             if major_key not in majors_map:
-                print(f"Warning: Major {major_name} at {uni_name} not found")
+                logger.warning(f"Major {major_name} at {uni_name} not found")
                 continue
                 
             major_id = majors_map[major_key]
             
             uni_course_key = f"{uni_name}_{uni_course_code}"
             if uni_course_key not in uni_courses_map:
-                print(f"Warning: University course {uni_course_code} at {uni_name} not found")
+                logger.warning(f"University course {uni_course_code} at {uni_name} not found")
                 continue
                 
             uni_course_id = uni_courses_map[uni_course_key]
@@ -99,7 +102,7 @@ def seed_articulations(db: Session):
                 cc_course_key = f"{cc_name}_{cc_code}"
                 
                 if cc_course_key not in courses_map:
-                    print(f"Warning: Community college course {cc_code} at {cc_name} not found")
+                    logger.warning(f"Community college course {cc_code} at {cc_name} not found")
                     continue
                 
                 cc_course_id = courses_map[cc_course_key]
@@ -117,8 +120,8 @@ def seed_articulations(db: Session):
                 successful_count += 1
         
         db.commit()
-        print(f"Successfully seeded {successful_count} articulation agreements")
+        logger.info(f"Successfully seeded {successful_count} articulation agreements")
     except Exception as e:
         db.rollback()
-        print(f"Error seeding articulations: {str(e)}")
+        logger.error(f"Error seeding articulations: {str(e)}")
         raise e  # Re-raise to see the full traceback

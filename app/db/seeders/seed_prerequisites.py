@@ -4,7 +4,9 @@ from sqlalchemy.orm import Session
 from app.db.models.prerequisites import Prerequisites
 from app.db.models.courses import Courses
 from app.db.models.prerequisites import PrerequisiteType
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def seed_prerequisite(db: Session):
     try:
@@ -26,7 +28,7 @@ def seed_prerequisite(db: Session):
             ).first()
             
             if not course or not prerequisite_course:
-                print(f"Warning: Could not find course for {prereq}")
+                logger.warning(f"Could not find course for {prereq}")
                 continue
             
             # Create prerequisite relationship
@@ -37,7 +39,7 @@ def seed_prerequisite(db: Session):
             ))
         
         db.commit()
-        print(f"Seeded {len(prerequisite_data)} prerequisites")
+        logger.info(f"Seeded {len(prerequisite_data)} prerequisites")
     except Exception as e:
         db.rollback()
-        print(f"Error seeding prerequisite: {str(e)}")
+        logger.error(f"Error seeding prerequisite: {str(e)}")

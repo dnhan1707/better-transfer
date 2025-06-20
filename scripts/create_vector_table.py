@@ -8,9 +8,10 @@ from app.db.connection import get_vector_db
 from RAG.db.vector_store import VectorStore
 from sqlalchemy import text  # Import the text function
 
-def main():
+async def main():
     """Initialize the vector database with required tables"""
     db = get_vector_db()
+    vector_store = VectorStore()
     try:
         print("Creating vector extension...")
         # Ensure vector extension is created - FIX HERE
@@ -18,7 +19,7 @@ def main():
         db.commit()
         
         print("Creating vector table...")
-        VectorStore.create_vector_table(db)
+        await vector_store.create_vector_table(db)
         print("Vector table created successfully!")
     finally:
         db.close()

@@ -5,7 +5,9 @@ from app.db.models.courses import Courses
 from app.db.models.university_courses import UniversityCourses
 from app.schemas.transferPlanRequest import TransferPlanRequest
 from typing import Optional
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def db_get_articulation_groups(db: Session, request: TransferPlanRequest):
     """
@@ -44,7 +46,7 @@ def db_get_articulation_groups(db: Session, request: TransferPlanRequest):
         
         return articulation_groups, list(all_uni_course_codes)
     except Exception as e:
-        print(f"Error retrieving articulation groups: {str(e)}")
+        logger.error(f"Error retrieving articulation groups: {str(e)}")
         raise
 
 def db_get_articulation_group_filtered(db: Session, request: TransferPlanRequest) -> Optional[ArticulationGroup]:
@@ -121,7 +123,7 @@ def db_get_cc_courses_with_relationships(db: Session, university_id: int, colleg
         # Return as a list of course groups
         return list(result.values())
     except Exception as e:
-        print(f"Error retrieving CC courses with relationships: {str(e)}")
+        logger.error(f"Error retrieving CC courses with relationships: {str(e)}")
         raise
 
 def db_get_cc_course_relationships_for_expression(db: Session, university_id: int, college_id: int, university_course_codes: list):

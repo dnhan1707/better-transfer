@@ -11,9 +11,10 @@ from app.db.models import (
 from typing import List, Dict, Any
 
 class KnowledgeChunker:
+    def __init__(self):
+        pass
 
-    @staticmethod
-    async def generate_course_chunker(db: Session) -> List[Dict[str, Any]]:
+    async def generate_course_chunker(self, db: Session) -> List[Dict[str, Any]]:
         chunks = []
 
         courses = db.query(
@@ -42,8 +43,7 @@ class KnowledgeChunker:
 
         return chunks
         
-    @staticmethod
-    async def generate_articulation_chunker(db: Session) -> List[Dict[str, Any]]:
+    async def generate_articulation_chunker(self, db: Session) -> List[Dict[str, Any]]:
         chunks = []
 
         articulations = db.query(
@@ -89,8 +89,7 @@ class KnowledgeChunker:
         
         return chunks
     
-    @staticmethod
-    async def generate_prerequisite_chunker(db: Session) -> List[Dict[str, Any]]:
+    async def generate_prerequisite_chunker(self, db: Session) -> List[Dict[str, Any]]:
         chunks = []
         
         # Create an alias for the second join to Courses
