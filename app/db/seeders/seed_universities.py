@@ -2,12 +2,14 @@ import os
 import json
 from sqlalchemy.orm import Session
 from app.db.models.universities import Universities
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def seed_universities(db: Session):
     data_count = db.query(Universities).count()
     if(data_count > 0):
-        print(f"Skipping seed universities, {data_count} found in the model")
+        logger.info(f"Skipping seed universities, {data_count} found in the model")
         return
     
     try:
@@ -22,8 +24,8 @@ def seed_universities(db: Session):
             db.add(universities)
         
         db.commit()
-        print(f"Successfully seeded {len(universities_data)} universities")
+        logger.info(f"Successfully seeded {len(universities_data)} universities")
     except Exception as e:
         db.rollback()
-        print(f"Error seeding universitites: {str(e)}")
+        logger.error(f"Error seeding universities: {str(e)}")
 

@@ -2,6 +2,9 @@ import openai
 import os
 from typing import List
 from dotenv import load_dotenv
+from app.utils.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -20,7 +23,7 @@ class EmbeddingService:
             embeddings = [data.embedding for data in response.data]
             return embeddings
         except Exception as e:
-            print(f"Error creating batch embeddings: {e}")
+            logger.error(f"Error creating batch embeddings: {e}")
             raise
 
     async def create_embedding(self, texts: str) -> List[float]:
@@ -33,5 +36,5 @@ class EmbeddingService:
             embedding = response.data[0].embedding
             return embedding
         except Exception as e:
-            print(f"Error creating batch embeddings: {e}")
+            logger.error(f"Error creating embeddings: {e}")
             raise

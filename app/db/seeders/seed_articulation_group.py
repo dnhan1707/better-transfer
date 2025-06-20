@@ -9,7 +9,9 @@ from app.db.models.universities import Universities
 from app.db.models.majors import Majors
 from app.db.models.university_courses import UniversityCourses
 from app.db.models.expression_node import ExpressionNode, NodeType, OperatorType
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def create_nodes_from_expression(db, group_id, expression, parent_id=None):
     """Recursively create nodes from a JSON expression"""
@@ -63,7 +65,7 @@ def seed_articulation_groups(db: Session):
     with open(data_file, 'r') as f:
         data = json.load(f)
     
-    print(f"Found {len(data)} articulation groups to seed")
+    logger.info(f"Found {len(data)} articulation groups to seed")
     groups_created = 0
     
     for item in data:
@@ -79,7 +81,7 @@ def seed_articulation_groups(db: Session):
         ).first()
         
         if not university or not major or not college:
-            print(f"Missing related entity for {item}")
+            logger.warning(f"Missing related entity for {item}")
             continue
             
         # Create the group
@@ -104,4 +106,4 @@ def seed_articulation_groups(db: Session):
     # Add this line to commit all changes to the database
     db.commit()
     
-    print(f"Successfully created {groups_created} articulation groups")
+    logger.info(f"Successfully created {groups_created} articulation groups")

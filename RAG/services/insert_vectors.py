@@ -5,8 +5,11 @@ from RAG.services.embedding_services import EmbeddingService
 from RAG.db.vector_store import VectorStore
 from typing import List, Dict, Any
 
-def create_vector_table(db: Session):
-    VectorStore.create_vector_table(db)
+vector_store = VectorStore()
+knowledge_chunker = KnowledgeChunker()
+
+async def create_vector_table(db: Session):
+    await vector_store.create_vector_table(db)
 
 async def process_chunks(db: Session, chunks: List[Dict[str, Any]], chunk_type: str):
     if not chunks:
@@ -20,15 +23,15 @@ async def process_chunks(db: Session, chunks: List[Dict[str, Any]], chunk_type: 
     for chunk in chunks:
         chunk["chunk_type"] = chunk_type
     
-    VectorStore.insert_chunks(db, chunks, embeddings)
+    await vector_store.insert_chunks(db, chunks, embeddings)
     return len(chunks)
 
 async def insert_vectors(db: Session):
     """Insert all vectors into the database"""
     # Generate chunks from different sources
-    course_chunks = await KnowledgeChunker.generate_course_chunker(db)
-    articulation_chunks = await KnowledgeChunker.generate_articulation_chunker(db)
-    prereq_chunks = await KnowledgeChunker.generate_prerequisite_chunker(db)
+    course_chunks = await knowledge_chunker.generate_course_chunker(db)
+    articulation_chunks = await knowledge_chunker.generate_articulation_chunker(db)
+    prereq_chunks = await knowledge_chunker.generate_prerequisite_chunker(db)
     
     # Process each chunk type
     total = 0

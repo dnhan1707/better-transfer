@@ -3,12 +3,14 @@ import json
 from sqlalchemy.orm import Session
 from app.db.models.courses import Courses
 from app.db.models.colleges import Colleges
+from app.utils.logging_config import get_logger
 
+logger = get_logger(__name__)
 
 def seed_courses(db: Session):
     data_count = db.query(Courses).count()
     if(data_count > 0):
-        print(f"Skipping seed Courses, {data_count} found in the model")
+        logger.info(f"Skipping seed Courses, {data_count} found in the model")
         return
 
     try:
@@ -28,7 +30,7 @@ def seed_courses(db: Session):
             # Extract college name and look up Id
             college_name = course_data.pop("college_name")
             if(college_name not in colleges):
-                print(f"Warning: College '{college_name}' not found, skipping course")
+                logger.warning(f"College '{college_name}' not found, skipping course")
                 continue
 
             # Create course with that Id to add into the table
@@ -42,8 +44,8 @@ def seed_courses(db: Session):
             db.add(course)
             
         db.commit()
-        print(f"Successfully seeded {len(courses_data)} courses")
+        logger.info(f"Successfully seeded {len(courses_data)} courses")
 
     except Exception as e:
         db.rollback()
-        print(f"Error seeding courses: {str(e)}")
+        logger.error(f"Error seeding courses: {str(e)}")

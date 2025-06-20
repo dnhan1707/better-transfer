@@ -3,11 +3,16 @@ from app.db.queries.institution_queries import db_get_basic_info
 from app.db.queries.articulation_queries import db_get_articulation_group_filtered
 from app.services.course_service import CourseSchedulingService
 from app.services.articulation_service import ArticulationService
-from app.schemas.transferPlanRequest import TransferPlanRequest
 from app.services.transfer_formatter_service import TransferPlanFormatter
 from app.services.course_detail_service import CourseDetailService
+from app.schemas.transferPlanRequest import TransferPlanRequest
+from RAG.db.vector_store import VectorStore
+from RAG.services.synthesizer import Synthesizer
+from app.utils.logging_config import get_logger
 
 import traceback
+
+logger = get_logger(__name__)
 
 class TransferPlanService:
     """Service for generating transfer plans."""
@@ -16,6 +21,8 @@ class TransferPlanService:
         self.course_service = CourseSchedulingService()
         self.articulation_service = ArticulationService()
         self.course_detail_service = CourseDetailService()
+        self.vector_store = VectorStore()
+        self.synthesizer = Synthesizer()
 
     async def create_transfer_plan(self, db: Session, request: TransferPlanRequest):
         """Create a transfer plan for a student."""
@@ -44,9 +51,26 @@ class TransferPlanService:
             
             return formatted_plan
         except Exception as e:
-            print(f"Error creating transfer plan: {str(e)}")
+            logger.error(f"Error creating transfer plan: {str(e)}")
             traceback.print_exc()
             return {"error": str(e)}
 
+    async def create_RAG_transfer_plan(self, db: Session, request: TransferPlanRequest):
+        try:
+            basic_info = db_get_basic_info(db, request)        
+            query = f"""
+            Transfer plan for {basic_info["major"]} major.
+            Target university: {basic_info["university"]}.
+            Starting college: {basic_info["college"]}.
+            Duration: {request.number_of_terms} terms.
+            Required: All courses and prerequisites needed to transfer successfully, including any acceptable alternative courses that may satisfy the same requirements.
+            """
+            vector_res = await self.vector_store.vector_search(db, query, request)
+            result = await self.synthesizer.generate_response(question=query, vector_res=vector_res)
 
-    
+            return result
+        
+        except Exception as e:
+            logger.error(f"Error RAG creating transfer plan: {str(e)}")
+            traceback.print_exc()
+            return {"error": str(e)}

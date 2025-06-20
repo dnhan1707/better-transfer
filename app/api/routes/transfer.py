@@ -25,4 +25,17 @@ def create_transfer_router() -> APIRouter:
             raise HTTPException(status_code=500, detail=str(e))
         
     
+    
+    @router.post("/rag")
+    async def RAG_transfer_plan(
+        request: TransferPlanRequest,
+        db: Session = Depends(get_db)
+    ):
+        try:
+            plan = await transfer_plan_service.create_RAG_transfer_plan(db, request)
+            return plan
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    
+    
     return router
