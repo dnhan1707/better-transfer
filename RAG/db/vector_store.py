@@ -65,19 +65,12 @@ class VectorStore:
     async def vector_search(self, db, input_text: str, transferRequest: TransferPlanRequest):
         """
         Search for similar content using vector similarity
-        
-        Args:
-            db: Database session
-            input_text: Query text to search for
-            limit: Maximum number of results to return
-            
-        Returns:
-            List of dictionaries containing search results with similarity scores
         """
         embedding_service = EmbeddingService()
         embedded_text = await embedding_service.create_embedding(input_text)
-        # Use the <=> operator for cosine distance (lower is more similar)
-        results = db.execute(
+
+        # Specific chunks for articulation / major-university match
+        specific_chunks = db.execute(
             text("""
             SELECT 
                 id,
@@ -91,8 +84,11 @@ class VectorStore:
                 knowledge_chunks
             WHERE 
                 college_id = :source_college
+                AND university_id = :target_university
+                AND major_id = :target_major 
             ORDER BY 
                 embedding <=> CAST(:query_embedding AS vector)
+            LIMIT 30
             """),
             {
                 "query_embedding": embedded_text,
@@ -101,8 +97,36 @@ class VectorStore:
                 "target_major": transferRequest.major_id,
             }
         ).fetchall()
-        
-        # Convert results to a list of dictionaries
+
+        # General course info (description + prerequisite)
+        general_chunks = db.execute(
+            text("""
+            SELECT 
+                id,
+                content, 
+                college_name, 
+                university_name, 
+                major_name, 
+                chunk_type,
+                1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+            FROM 
+                knowledge_chunks
+            WHERE 
+                college_id = :source_college
+                AND chunk_type IN ('course_description', 'prerequisite')
+            ORDER BY 
+                embedding <=> CAST(:query_embedding AS vector)
+            LIMIT 30
+            """),
+            {
+                "query_embedding": embedded_text,
+                "source_college": transferRequest.college_id,
+            }
+        ).fetchall()
+
+        # Combine results
+        combined = specific_chunks + general_chunks
+
         return [
             {
                 "id": row[0],
@@ -113,5 +137,5 @@ class VectorStore:
                 "chunk_type": row[5],
                 "similarity": row[6]
             }
-            for row in results
+            for row in combined
         ]

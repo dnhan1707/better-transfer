@@ -1,8 +1,8 @@
-"""Add all models
+"""Fix circular dependency
 
-Revision ID: 8ef64985a719
+Revision ID: 35216c2dc901
 Revises: 
-Create Date: 2025-04-06 21:16:52.692311
+Create Date: 2025-06-20 22:04:19.779558
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '8ef64985a719'
+revision: str = '35216c2dc901'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -60,8 +60,8 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('course_name', sa.String(), nullable=False),
     sa.Column('course_code', sa.String(), nullable=False),
-    sa.Column('major_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['major_id'], ['majors.id'], ),
+    sa.Column('university_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['university_id'], ['universities.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_university_courses_id'), 'university_courses', ['id'], unique=False)
@@ -71,6 +71,8 @@ def upgrade() -> None:
     sa.Column('university_course_id', sa.Integer(), nullable=False),
     sa.Column('university_id', sa.Integer(), nullable=False),
     sa.Column('major_id', sa.Integer(), nullable=False),
+    sa.Column('group_id', sa.String(), nullable=False),
+    sa.Column('relationship_type', sa.Enum('AND', 'OR', name='articulationrelationshiptype'), nullable=False),
     sa.ForeignKeyConstraint(['community_college_course_id'], ['courses.id'], ),
     sa.ForeignKeyConstraint(['major_id'], ['majors.id'], ),
     sa.ForeignKeyConstraint(['university_course_id'], ['university_courses.id'], ),
@@ -78,11 +80,66 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_articulation_agreements_id'), 'articulation_agreements', ['id'], unique=False)
+    op.create_table('articulation_group',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('university_id', sa.Integer(), nullable=False),
+    sa.Column('major_id', sa.Integer(), nullable=False),
+    sa.Column('college_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(), nullable=True),
+    sa.Column('root_expression_node_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['college_id'], ['colleges.id'], ),
+    sa.ForeignKeyConstraint(['major_id'], ['majors.id'], ),
+    sa.ForeignKeyConstraint(['root_expression_node_id'], ['expression_nodes.id'], name='fk_articulation_group_root_node', use_alter=True),
+    sa.ForeignKeyConstraint(['university_id'], ['universities.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_articulation_group_id'), 'articulation_group', ['id'], unique=False)
+    op.create_table('course_major_mappings',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('university_course_id', sa.Integer(), nullable=False),
+    sa.Column('major_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['major_id'], ['majors.id'], ),
+    sa.ForeignKeyConstraint(['university_course_id'], ['university_courses.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('university_course_id', 'major_id', name='unq_course_major')
+    )
+    op.create_index(op.f('ix_course_major_mappings_id'), 'course_major_mappings', ['id'], unique=False)
+    op.create_table('prerequisites',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('course_id', sa.Integer(), nullable=False),
+    sa.Column('prerequisite_course_id', sa.Integer(), nullable=False),
+    sa.Column('prerequisite_type', sa.Enum('REQUIRED', 'COREQUISITE', 'RECOMMENDED', name='prerequisitetype'), nullable=False),
+    sa.ForeignKeyConstraint(['course_id'], ['courses.id'], ),
+    sa.ForeignKeyConstraint(['prerequisite_course_id'], ['courses.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_prerequisites_id'), 'prerequisites', ['id'], unique=False)
+    op.create_table('expression_nodes',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('group_id', sa.Integer(), nullable=False),
+    sa.Column('parent_node_id', sa.Integer(), nullable=True),
+    sa.Column('node_type', sa.Enum('OPERATOR', 'COURSE', name='nodetype'), nullable=False),
+    sa.Column('operator_type', sa.Enum('AND', 'OR', name='operatortype'), nullable=True),
+    sa.Column('university_course_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['group_id'], ['articulation_group.id'], ),
+    sa.ForeignKeyConstraint(['parent_node_id'], ['expression_nodes.id'], ),
+    sa.ForeignKeyConstraint(['university_course_id'], ['university_courses.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_expression_nodes_id'), 'expression_nodes', ['id'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_expression_nodes_id'), table_name='expression_nodes')
+    op.drop_table('expression_nodes')
+    op.drop_index(op.f('ix_prerequisites_id'), table_name='prerequisites')
+    op.drop_table('prerequisites')
+    op.drop_index(op.f('ix_course_major_mappings_id'), table_name='course_major_mappings')
+    op.drop_table('course_major_mappings')
+    op.drop_index(op.f('ix_articulation_group_id'), table_name='articulation_group')
+    op.drop_table('articulation_group')
     op.drop_index(op.f('ix_articulation_agreements_id'), table_name='articulation_agreements')
     op.drop_table('articulation_agreements')
     op.drop_index(op.f('ix_university_courses_id'), table_name='university_courses')

@@ -5,7 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.db.connection import Base, engine
+from app.db.connection import Base
+from sqlalchemy import create_engine
+import os
 
 import app.db.models.colleges
 import app.db.models.courses
@@ -25,6 +27,7 @@ import os
 logger = get_logger(__name__)
 
 load_dotenv()
+engine = create_engine(os.getenv("DATABASE_URL"))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

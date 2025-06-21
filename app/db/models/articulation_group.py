@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 from app.db.connection import Base
+# Remove this import to avoid circular import
 from app.db.models.expression_node import ExpressionNode
 
 class ArticulationGroup(Base):
@@ -16,12 +17,17 @@ class ArticulationGroup(Base):
     # Name/description of this requirement group
     name = Column(String, nullable=True)
     
-    # Reference to the root node of the expression tree
-    root_expression_node_id = Column(Integer, ForeignKey("expression_nodes.id"), nullable=True)
+    # USE THIS APPROACH - add use_alter=True and name parameter
+    root_expression_node_id = Column(
+        Integer, 
+        ForeignKey(
+            "expression_nodes.id", 
+            use_alter=True, 
+            name="fk_articulation_group_root_node"
+        ), 
+        nullable=True
+    )
     
-    # Removed the JSON expression field
-    # expression = Column(JSON, nullable=False)  # example: {"operator": "AND", "groups": [...]}
-
     # Relationships
     major = relationship("Majors", back_populates="articulation_groups")
     university = relationship("Universities", back_populates="articulation_groups")
@@ -34,5 +40,6 @@ class ArticulationGroup(Base):
     root_node = relationship(
         "ExpressionNode", 
         foreign_keys=[root_expression_node_id],
+        post_update=True,  # Add this to avoid the circular dependency
         uselist=False
     )
