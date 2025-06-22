@@ -1,41 +1,64 @@
-# 🎓 Better Transfer — Plan Your Transfer, Smarter (In Progress)
+# Better Transfer
 
-Better Transfer is a web application that helps community college students plan and track their academic journey toward transferring to a 4-year university — especially UC campuses in California.
+Better Transfer is a research project exploring how Retrieval Augmented Generation (RAG) can help community college students plan their academic path when transferring to a four‑year university.
 
-## 🚀 MVP Features (v1.0)
+The backend is built with **FastAPI** and stores transfer knowledge in a dedicated pgvector database. OpenAI embeddings and GPT models are used to synthesize a customized transfer plan for each request.
 
-- 🔗 Articulation agreement database between PCC and various UC campuses.
-- 📘 Generate accurate transfer plans based on selected **UC** and **major**.
-- 📆 Transfer plans are broken down into **4 customizable semesters**, each with difficulty levels.
-- 🔄 Moveable course components in a drag-and-drop dashboard.
-- 🧮 Semester count is adjustable based on the student’s preference.
-- ✅ Course completion tracking built-in.
-- 🧠 Dashboard automatically re-adjusts based on changes.
-- 🗂️ Support for **multiple dashboards** per user.
+## Features
 
----
+- Articulation agreements and prerequisite tracking in PostgreSQL
+- Vector storage with the pgvector extension and HNSW index
+- Async API endpoints to generate transfer plans with or without RAG
+- Helper scripts to seed data and populate embeddings
+- Docker compose configuration for the vector database
 
-## 💡 Future Features
+## Getting Started
 
-- 🤖 **AI Counselor**: Smart suggestions based on academic goals.
-- 🆚 Compare different dashboard plans to decide the most efficient path.
+1. Install Python dependencies:
+   ```bash
+   pip install -r requirement.txt
+   ```
+2. Create a `.env` file with at least these values:
+   ```
+   DATABASE_URL=<application database URL>
+   RAG_DATABASE_URL=<vector database URL>
+   OPENAI_API_KEY=<your OpenAI key>
+   ```
+3. Launch PostgreSQL with pgvector:
+   ```bash
+   docker-compose up -d
+   ```
+4. Initialize the vector store and insert embeddings:
+   ```bash
+   python scripts/create_vector_table.py
+   python scripts/add_embedding.py
+   ```
 
----
+## Running the API
 
-## 🏗️ Tech Stack
+Start the development server with Uvicorn:
+```bash
+uvicorn app.main:app --reload
+```
 
-| Layer            | Tech                     |
-|------------------|--------------------------|
-| Frontend         | Next.js (React, Tailwind)|
-| Backend          | FastAPI                  |
-| Database         | PostgreSQL + SQLAlchemy  |
-| ORM              | SQLAlchemy               |
-| Migrations       | Alembic                  |
-| Dev Tools        | Docker, VSCode, PgAdmin  |
+The following endpoints are available:
+- `POST /transfer-plan` – rule‑based planner
+- `POST /transfer-plan/rag` – RAG enhanced planner
 
----
+## Tests
 
-## 🧠 Why This Project?
+Run all unit and integration tests with:
+```bash
+pytest
+```
 
-Many students struggle to navigate the confusing articulation process, often taking unnecessary courses. **Better Transfer** makes this process clear, visual, and interactive — ultimately saving time and money for students.
+## Project Layout
 
+- `app/` – FastAPI application and database models
+- `RAG/` – vector store, embedding service, and GPT synthesizer
+- `scripts/` – utilities for seeding and vector generation
+- `docker-compose.yml` – container for the pgvector database
+
+## License
+
+This project is released under the MIT License.
