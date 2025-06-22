@@ -30,6 +30,9 @@ The backend is built with **FastAPI** and stores transfer knowledge in a dedicat
    ```
 4. Initialize the vector store and insert embeddings:
    ```bash
+   alembic init alembic
+   alembic revision --autogenerate -m "create models"
+   python scripts/seed_database.py
    python scripts/create_vector_table.py
    python scripts/add_embedding.py
    ```
