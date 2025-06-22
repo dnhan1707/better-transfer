@@ -2,19 +2,23 @@ from sqlalchemy import text
 from typing import Dict, Any, List
 from RAG.services.embedding_services import EmbeddingService
 from app.schemas.transferPlanRequest import TransferPlanRequest
+from RAG.config.settings import get_settings
+
 
 class VectorStore:
     def __init__(self):
-        pass
+        settings = get_settings()
+        self.dimensions = settings.vector_store.embedding_dimensions
+        self.table_name = settings.vector_store.table_name
         
     async def create_vector_table(self, db):
         db.execute(
-            text("""
+            text(f"""
             CREATE EXTENSION IF NOT EXISTS vector;
-            CREATE TABLE IF NOT EXISTS knowledge_chunks (
+            CREATE TABLE IF NOT EXISTS {self.table_name} (
                 id SERIAL PRIMARY KEY,
                 content TEXT NOT NULL,
-                embedding VECTOR(1536),  
+                embedding VECTOR({self.dimensions}),  
                 college_id INTEGER,
                 college_name TEXT,
                 university_id INTEGER,
@@ -25,7 +29,7 @@ class VectorStore:
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
 
-            CREATE INDEX ON knowledge_chunks USING hnsw (embedding vector_cosine_ops);
+            CREATE INDEX ON {self.table_name} USING hnsw (embedding vector_cosine_ops);
             """)
         )
         db.commit()
@@ -33,8 +37,8 @@ class VectorStore:
     async def insert_chunk(self, db, chunk: Dict[str, Any], embedding: List[float]):
         """Insert a single chunk with embedding into the vector database"""
         db.execute(
-            text("""
-            INSERT INTO knowledge_chunks
+            text(f"""
+            INSERT INTO {self.table_name}
             (content, embedding, college_id, college_name, university_id, university_name, 
             major_id, major_name, chunk_type)
             VALUES
@@ -71,7 +75,7 @@ class VectorStore:
 
         # Specific chunks for articulation / major-university match
         specific_chunks = db.execute(
-            text("""
+            text(f"""
             SELECT 
                 id,
                 content, 
@@ -81,7 +85,7 @@ class VectorStore:
                 chunk_type,
                 1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
             FROM 
-                knowledge_chunks
+                {self.table_name}
             WHERE 
                 college_id = :source_college
                 AND university_id = :target_university
@@ -100,7 +104,7 @@ class VectorStore:
 
         # General course info (description + prerequisite)
         general_chunks = db.execute(
-            text("""
+            text(f"""
             SELECT 
                 id,
                 content, 
@@ -110,7 +114,7 @@ class VectorStore:
                 chunk_type,
                 1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
             FROM 
-                knowledge_chunks
+                {self.table_name}
             WHERE 
                 college_id = :source_college
                 AND chunk_type IN ('course_description', 'prerequisite')

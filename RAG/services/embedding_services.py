@@ -1,21 +1,22 @@
-import openai
+from openai import OpenAI
 import os
 from typing import List
 from dotenv import load_dotenv
 from app.utils.logging_config import get_logger
+from RAG.config.settings import get_settings
 
 logger = get_logger(__name__)
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
-
 class EmbeddingService:
     def __init__(self):
-        self.model = "text-embedding-ada-002"
+        settings = get_settings()
+        self.model = settings.openai.embedding_model
+        self.client = OpenAI(api_key=settings.openai.api_key)
+
 
     async def batch_create_embedding(self, texts: List[str]) -> List[List[float]]:
         try:
-            response = openai.embeddings.create(
+            response = self.client.embeddings.create(
                 model=self.model,
                 input=texts
             )
@@ -28,7 +29,7 @@ class EmbeddingService:
 
     async def create_embedding(self, texts: str) -> List[float]:
         try:
-            response = openai.embeddings.create(
+            response = self.client.embeddings.create(
                 model=self.model,
                 input=texts
             )
