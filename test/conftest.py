@@ -1,9 +1,9 @@
-from app.db.connection import get_vector_db
+from app.db.connection import get_db
 import pytest
 
 @pytest.fixture
 def db():
-    connection = get_vector_db()
+    connection = get_db()
     try:
         yield connection
     finally:
