@@ -1,11 +1,6 @@
 import sys
 import os
 import asyncio
-from dotenv import load_dotenv
-
-# Add the root project directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from app.db.connection import SessionLocal
 from RAG.services.insert_vectors import insert_vectors
 from RAG.db.vector_store import VectorStore
@@ -13,6 +8,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 load_dotenv()
 RAG_DATABASE_URL = os.getenv("RAG_DATABASE_URL")
