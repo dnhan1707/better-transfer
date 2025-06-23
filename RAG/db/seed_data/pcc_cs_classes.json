@@ -1,0 +1,34 @@
+{
+  "classes": [
+    "Course Information: CS 001 (Introduction to Computers and Programming) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: CS 002 (Fundamentals of Computer Science I) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 003A (Fundamentals of Computer Science II (C++)) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 003B (Fundamentals of Computer Science (Java)) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 003C (Fundamentals of Computer Science (Python)) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 006 (Introduction to Applied Logic Design) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 008 (Fundamentals of Computer Science III \u2013 Data Structures) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 018 (Unix Scripting with Bash) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 038 (Introduction to Software Engineering) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5.",
+    "Course Information: CS 045 (Discrete Structures with Computer Science Applications) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5.",
+    "Course Information: CS 066 (Assembly Language Programming for the Sciences and Mathematics) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 021 (Introduction to Programming Concepts and Methodologies) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: CS 031 (Introduction to Data Science) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
+    "Course Information: CS 033 (Advanced Java Programming and Algorithm with Data Structures) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: CS 034 (Advanced Python Programming and Basic Data Structures) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: CS 137 (R Programming for Data Science) at Pasadena City College is worth 2.0 units. Difficulty level estimated as 2/5."
+  ],
+  "prerequsites": [
+    "Course CS 002 (Fundamentals of Computer Science I) at Pasadena City College has MATH 008 (Precalculus Trigonometry) or MATH 009 (Precalculus Mathematics) as a recommended prerequisite.",
+    "Course CS 003A (Fundamentals of Computer Science II (C++)) at Pasadena City College has CS 002 (Fundamentals of Computer Science I) as a recommended prerequisite.",
+    "Course CS 003B (Fundamentals of Computer Science (Java)) at Pasadena City College has CS 001 (Introduction to Computers and Programming) as a recommended prerequisite.",
+    "Course CS 003C (Fundamentals of Computer Science (Python)) at Pasadena City College has CS 001 (Introduction to Computers and Programming) as a recommended prerequisite.",
+    "Course CS 006 (Introduction to Applied Logic Design) at Pasadena City College has CS 002 (Fundamentals of Computer Science I) as a recommended prerequisite.",
+    "Course CS 008 (Fundamentals of Computer Science III \u2013 Data Structures) at Pasadena City College has CS 003A (Fundamentals of Computer Science II (C++)) as a recommended prerequisite.",
+    "Course CS 018 (Unix Scripting with Bash) at Pasadena City College has CS 002 (Fundamentals of Computer Science I) or CS 003A (Fundamentals of Computer Science II (C++)) or CS 003B (Fundamentals of Computer Science (Java)) or CS 003C (Fundamentals of Computer Science (Python)) as a recommended prerequisite.",
+    "Course CS 038 (Introduction to Software Engineering) at Pasadena City College has CS 008 (Fundamentals of Computer Science III \u2013 Data Structures) as a recommended prerequisite.",
+    "Course CS 045 (Discrete Structures with Computer Science Applications) at Pasadena City College has CS 002 (Fundamentals of Computer Science I) or CS 003A (Fundamentals of Computer Science II (C++)) or CS 003B (Fundamentals of Computer Science (Java)) or CS 003C (Fundamentals of Computer Science (Python)) as a recommended prerequisite.",
+    "Course CS 066 (Assembly Language Programming for the Sciences and Mathematics) at Pasadena City College has CS 002 (Fundamentals of Computer Science I) as a recommended prerequisite.",
+    "Course CS 033 (Advanced Java Programming and Algorithm with Data Structures) at Pasadena City College has CS 003B (Fundamentals of Computer Science (Java)) as a recommended prerequisite.",
+    "Course CS 034 (Advanced Python Programming and Basic Data Structures) at Pasadena City College has CS 031 (Introduction to Data Science) or CS 003C (Fundamentals of Computer Science (Python)) or CS 002 (Fundamentals of Computer Science I) or CIS 012 (unknown course) as a recommended prerequisite."
+  ]
+}
