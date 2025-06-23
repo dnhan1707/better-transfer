@@ -1,0 +1,27 @@
+{
+  "classes": [
+    "Course Information: ENGR 001A (Surveying) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 002 (Engineering Graphics) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 010 (Introduction to Engineering) at Pasadena City College is worth 2.0 units. Difficulty level estimated as 2/5.",
+    "Course Information: ENGR 011 (Statics) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 012 (Dynamics) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 013 (Strength of Materials) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 014 (Materials of Engineering) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 015B (Applied Mechanics) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 016 (Engineering Circuits) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
+    "Course Information: ENGR 016L (Engineering Circuits Laboratory) at Pasadena City College is worth 1.0 units. Difficulty level estimated as 1/5.",
+    "Course Information: ENGR 018 (Programming and Problem-Solving in MATLAB) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5."
+  ],
+  "prerequsites": [
+    "Course ENGR 001A (Surveying) at Pasadena City College has MATH 008 (Precalculus Trigonometry) and MATH 009 (Precalculus Mathematics) as a recommended prerequisite.",
+    "Course ENGR 002 (Engineering Graphics) at Pasadena City College has MATH 008 (Precalculus Trigonometry) and MATH 009 (Precalculus Mathematics) as a recommended prerequisite.",
+    "Course ENGR 011 (Statics) at Pasadena City College has MATH 005B (Single Variable Calculus II) and PHYS 001A (unknown course) and PHYS 008A (unknown course) as a recommended prerequisite.",
+    "Course ENGR 012 (Dynamics) at Pasadena City College has ENGR 011 (Statics) as a recommended prerequisite.",
+    "Course ENGR 013 (Strength of Materials) at Pasadena City College has ENGR 011 (Statics) as a recommended prerequisite.",
+    "Course ENGR 014 (Materials of Engineering) at Pasadena City College has CHEM 001A (unknown course) and PHYS 001A (unknown course) and PHYS 008A (unknown course) as a recommended prerequisite.",
+    "Course ENGR 015B (Applied Mechanics) at Pasadena City College has MATH 005B (Single Variable Calculus II) as a recommended prerequisite.",
+    "Course ENGR 016 (Engineering Circuits) at Pasadena City College has PHYS 001C (unknown course) and PHYS 008B (unknown course) and MATH 055 (Differential Equations) as a recommended prerequisite.",
+    "Course ENGR 016L (Engineering Circuits Laboratory) at Pasadena City College has ENGR 016 (Engineering Circuits) as a recommended prerequisite.",
+    "Course ENGR 018 (Programming and Problem-Solving in MATLAB) at Pasadena City College has MATH 005A (Single Variable Calculus I) as a recommended prerequisite."
+  ]
+}

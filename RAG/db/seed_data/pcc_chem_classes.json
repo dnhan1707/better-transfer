@@ -1,0 +1,10 @@
+{
+  "classes": [
+    "Course Information: CHEM 001A (General Chemistry and Chemical Analysis I) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5.",
+    "Course Information: CHEM 022 (Introductory Chemistry) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5."    
+],
+  "prerequsites": [
+    "Course CHEM 001A (General Chemistry and Chemical Analysis I) at Pasadena City College has prerequisite(s) Intermediate Algebra or placement into any MATH course numbered 001-099 and CHEM 022 or equivalent skills as demonstrated through placement based on the chemistry assessment process",
+    "Course CHEM 022 (Introductory Chemistry) at Pasadena City College has prerequisite(s) Intermediate Algebra or placement into any Math class numbered 001-099"
+]
+}
