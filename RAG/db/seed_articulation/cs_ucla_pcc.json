@@ -1,0 +1,18 @@
+{
+  "course_mapping": [
+    "Course CS 003A (Fundamentals of Computer Science II (C++)) at Pasadena City College must be taken to satisfy course COM SCI 31 (Introduction to Computer Science I) at University of California, Los Angeles for the computer science major.",
+    "Course CS 008 (Fundamentals of Computer Science III - Data Structures) at Pasadena City College must be taken to satisfy course COM SCI 32 (Introduction to Computer Science II) at University of California, Los Angeles for the computer science major.",
+    "Course CS 066 (Assembly Language Programming for the Sciences and Mathematics) at Pasadena City College must be taken to satisfy course COM SCI 33 (Introduction to Computer Organization) at University of California, Los Angeles for the computer science major.",
+    "Course CS 006 (Introduction to Applied Logic Design) at Pasadena City College must be taken to satisfy course COM SCI M51A (Logic Design of Digital Systems) at University of California, Los Angeles for the computer science major.",
+    "Course CS 006 (Introduction to Applied Logic Design) at Pasadena City College must be taken to satisfy course EC ENGR M16 (Logic Design of Digital Systems) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 005A (Single Variable Calculus I) at Pasadena City College must be taken to satisfy course MATH 31A (Differential and Integral Calculus) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 005B (Single Variable Calculus II) at Pasadena City College must be taken to satisfy course MATH 31B (Integration and Infinite Series) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 005C (Multivariable Calculus) at Pasadena City College must be taken to satisfy course MATH 32A (Calculus of Several Variables) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 005C (Multivariable Calculus) at Pasadena City College must be taken to satisfy course MATH 32B (Calculus of Several Variables) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 010 (Linear Algebra and Applications) at Pasadena City College must be taken to satisfy course MATH 33A (Linear Algebra and Applications) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 055 (Differential Equations) at Pasadena City College must be taken to satisfy course MATH 33B (Differential Equations) at University of California, Los Angeles for the computer science major.",
+    "Course MATH 022 (Discrete Mathematics) at Pasadena City College must be taken to satisfy course MATH 61 (Introduction to Discrete Structures) at University of California, Los Angeles for the computer science major.",
+    "Course PHYS 008A (Physics for Scientists and Engineers I: Mechanics) and PHYS 008B (Physics for Scientists and Engineers II: Waves, Electricity & Magnetism) and PHYS 008C (Physics for Scientists and Engineers III: Thermodynamics, Optics, and Modern Physics) at Pasadena City College must be taken to satisfy courses PHYSICS 1A, 1B, and 1C at University of California, Los Angeles for the computer science major.",
+    "Course ENGL 001A (Reading and Composition) at Pasadena City College must be taken to satisfy course ENGCOMP 3 (English Composition, Rhetoric, and Language) at University of California, Los Angeles for the computer science major."
+  ]
+}
