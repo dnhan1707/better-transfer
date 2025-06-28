@@ -1,4 +1,7 @@
 {
+  "community_college": "Pasadena City College",
+  "course_name": "Computer Information Systems",
+  "code": "CIS",
   "classes": [
     "Course Information: CIS 010 (Introduction to Information Systems) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
     "Course Information: CIS 011 (Information and Communication Technology Essentials) at Pasadena City College is worth 4.0 units. Difficulty level estimated as 4/5.",
