@@ -1,4 +1,7 @@
 {
+  "community_college" : "Pasadena City College",
+  "university": "University of California, Los Angeles",
+  "major": "Computer Science",
   "course_mapping": [
     "Course CS 003A (Fundamentals of Computer Science II (C++)) at Pasadena City College must be taken to satisfy course COM SCI 31 (Introduction to Computer Science I) at University of California, Los Angeles for the computer science major.",
     "Course CS 008 (Fundamentals of Computer Science III - Data Structures) at Pasadena City College must be taken to satisfy course COM SCI 32 (Introduction to Computer Science II) at University of California, Los Angeles for the computer science major.",

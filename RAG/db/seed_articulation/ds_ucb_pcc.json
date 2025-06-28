@@ -1,5 +1,8 @@
 {
-  "course_mapping": [
+    "community_college" : "Pasadena City College",
+    "university": "University of California, Berkeley",
+    "major": "Data Science",
+    "course_mapping": [
     "Course MATH 005A (Single Variable Calculus I) at Pasadena City College must be taken to satisfy course MATH 1A (Calculus) at University of California, Berkeley for the computer science major.",
     "Course MATH 005B (Single Variable Calculus II) and MATH 055 (Differential Equations) at Pasadena City College must be taken to satisfy course MATH 1B (Calculus) at University of California, Berkeley for the computer science major.",
     "Course MATH 010 (Linear Algebra and Applications) and MATH 055 (Differential Equations) at Pasadena City College must be taken to satisfy course MATH 54 (Linear Algebra and Differential Equations) at University of California, Berkeley for the computer science major.",

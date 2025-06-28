@@ -33,6 +33,26 @@ class VectorStore:
             """)
         )
         db.commit()
+    
+    async def create_vector_table_v2(self, db):
+        db.execute(
+            text(f"""
+            CREATE EXTENSION IF NOT EXISTS vector;
+            CREATE TABLE IF NOT EXISTS {self.table_name} (
+                id SERIAL PRIMARY KEY,
+                content TEXT NOT NULL,
+                college_name TEXT,
+                university_name TEXT,
+                major_name TEXT,
+                chunk_type VARCHAR(50) NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                embedding VECTOR({self.dimensions}),  
+            );
+
+            CREATE INDEX ON {self.table_name} USING hnsw (embedding vector_cosine_ops);
+            """)
+        )
+        db.commit()
 
     async def insert_chunk(self, db, chunk: Dict[str, Any], embedding: List[float]):
         """Insert a single chunk with embedding into the vector database"""

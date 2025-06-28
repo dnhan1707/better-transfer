@@ -1,4 +1,7 @@
 {
+  "community_college": "Pasadena City College",
+  "course_name": "Mathematics",
+  "code": "MATH",
   "classes": [
     "Course Information: MATH 003 (College Algebra for STEM) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5.",
     "Course Information: MATH 005A (Single Variable Calculus I) at Pasadena City College is worth 5.0 units. Difficulty level estimated as 5/5.",

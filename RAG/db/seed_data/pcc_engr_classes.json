@@ -1,4 +1,7 @@
 {
+  "community_college": "Pasadena City College",
+  "course_name": "Engineering",
+  "code": "ENGR",
   "classes": [
     "Course Information: ENGR 001A (Surveying) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
     "Course Information: ENGR 002 (Engineering Graphics) at Pasadena City College is worth 3.0 units. Difficulty level estimated as 3/5.",
