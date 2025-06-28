@@ -8,10 +8,10 @@ class ChunkerService():
     def __init__(self):
         settings = get_settings()
         self.dimensions = settings.vector_store.embedding_dimensions
-        self.table_name = settings.vector_store.table_name
+        self.table_name = "knowledge_chunks_v2"  # Fixed variable name for consistency
         
 
-    async def insert_chunk(self, db, chunk: Dict[any], embedding: List[float]):
+    async def insert_chunk(self, db, chunk: Dict[str, any], embedding: List[float]):
         db.execute(
             text(f"""
             INSERT INTO {self.table_name}

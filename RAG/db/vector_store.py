@@ -10,6 +10,7 @@ class VectorStore:
         settings = get_settings()
         self.dimensions = settings.vector_store.embedding_dimensions
         self.table_name = settings.vector_store.table_name
+        self.table_name_v2 = "knowledge_chunks_v2"
         
     async def create_vector_table(self, db):
         db.execute(
@@ -38,7 +39,7 @@ class VectorStore:
         db.execute(
             text(f"""
             CREATE EXTENSION IF NOT EXISTS vector;
-            CREATE TABLE IF NOT EXISTS {self.table_name} (
+            CREATE TABLE IF NOT EXISTS {self.table_name_v2} (
                 id SERIAL PRIMARY KEY,
                 content TEXT NOT NULL,
                 college_name TEXT,
@@ -46,10 +47,10 @@ class VectorStore:
                 major_name TEXT,
                 chunk_type VARCHAR(50) NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                embedding VECTOR({self.dimensions}),  
+                embedding VECTOR({self.dimensions})  
             );
 
-            CREATE INDEX ON {self.table_name} USING hnsw (embedding vector_cosine_ops);
+            CREATE INDEX ON {self.table_name_v2} USING hnsw (embedding vector_cosine_ops);
             """)
         )
         db.commit()
