@@ -99,7 +99,6 @@ async def process_articulation_data(db):
     """Process articulation mappings from seed_articulation directory"""
     seed_dir = Path('RAG/db/seed_articulation')
     processed_files = 0
-    
     print("\n=== PHASE 2: Processing articulation data ===\n")
     
     for json_path in seed_dir.glob("*.json"):

@@ -27,8 +27,10 @@ class Synthesizer:
             ],
             response_format={"type": "json_object"}
         )
-        logger.debug(response.choices[0].message.content)
-        return response.choices[0].message.content
+        # Parse the JSON string into a Python dictionary before returning
+        json_response = json.loads(response.choices[0].message.content)
+        logger.debug("Parsed response: %s", json_response)
+        return json_response
 
 
     async def vector_result_to_json(self, vector_res):

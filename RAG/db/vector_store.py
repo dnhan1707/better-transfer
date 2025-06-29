@@ -3,7 +3,8 @@ from typing import Dict, Any, List
 from RAG.services.embedding_services import EmbeddingService
 from app.schemas.transferPlanRequest import TransferPlanRequest
 from RAG.config.settings import get_settings
-
+from app.db.queries.institution_queries import db_get_basic_info
+from app.db.connection import get_vector_db
 
 class VectorStore:
     def __init__(self):
@@ -39,6 +40,7 @@ class VectorStore:
         db.execute(
             text(f"""
             CREATE EXTENSION IF NOT EXISTS vector;
+            DROP TABLE IF EXISTS {self.table_name_v2};
             CREATE TABLE IF NOT EXISTS {self.table_name_v2} (
                 id SERIAL PRIMARY KEY,
                 content TEXT NOT NULL,
@@ -47,10 +49,20 @@ class VectorStore:
                 major_name TEXT,
                 chunk_type VARCHAR(50) NOT NULL,
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-                embedding VECTOR({self.dimensions})  
+                embedding VECTOR({self.dimensions})
             );
 
+            -- Vector similarity index
             CREATE INDEX ON {self.table_name_v2} USING hnsw (embedding vector_cosine_ops);
+            
+            -- Column indexes for faster filtering
+            CREATE INDEX idx_{self.table_name_v2}_college ON {self.table_name_v2} (college_name);
+            CREATE INDEX idx_{self.table_name_v2}_university ON {self.table_name_v2} (university_name);
+            CREATE INDEX idx_{self.table_name_v2}_major ON {self.table_name_v2} (major_name);
+            CREATE INDEX idx_{self.table_name_v2}_chunk_type ON {self.table_name_v2} (chunk_type);
+            
+            -- Composite index for common filter combinations
+            CREATE INDEX idx_{self.table_name_v2}_college_chunk ON {self.table_name_v2} (college_name, chunk_type);
             """)
         )
         db.commit()
@@ -152,6 +164,95 @@ class VectorStore:
         # Combine results
         combined = specific_chunks + general_chunks
 
+        return [
+            {
+                "id": row[0],
+                "content": row[1],
+                "college_name": row[2],
+                "university_name": row[3],
+                "major_name": row[4],
+                "chunk_type": row[5],
+                "similarity": row[6]
+            }
+            for row in combined
+        ]
+
+
+    async def vector_search_v2(self, db, input_text: str, transferRequest: TransferPlanRequest):
+        """
+        Search for similar content using vector similarity
+        """
+        embedding_service = EmbeddingService()
+        embedded_text = await embedding_service.create_embedding(input_text)
+
+        # Find basic info
+        basic_info = db_get_basic_info(db, transferRequest)
+        print(basic_info)
+        # Extract string values from objects
+        college_name = basic_info["college"].college_name
+        university_name = basic_info["university"].university_name 
+        major_name = basic_info["major"].major_name 
+        
+
+        vector_db = get_vector_db()
+        # Specific chunks for articulation / major-university match
+        specific_chunks = vector_db.execute(
+            text(f"""
+            SELECT 
+                id,
+                content, 
+                college_name, 
+                university_name, 
+                major_name, 
+                chunk_type,
+                1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+            FROM 
+                {self.table_name_v2}
+            WHERE 
+                college_name = :source_college
+                AND university_name = :target_university
+                AND major_name = :target_major 
+            ORDER BY 
+                embedding <=> CAST(:query_embedding AS vector)
+            LIMIT 30
+            """),
+            {
+                "query_embedding": embedded_text,
+                "source_college": college_name,
+                "target_university": university_name,
+                "target_major": major_name,
+            }
+        ).fetchall()
+
+        # General course info (description + prerequisite)
+        general_chunks = vector_db.execute(
+            text(f"""
+            SELECT 
+                id,
+                content, 
+                college_name, 
+                university_name, 
+                major_name, 
+                chunk_type,
+                1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+            FROM 
+                {self.table_name_v2}
+            WHERE 
+                college_name = :source_college
+                AND chunk_type IN ('course_description', 'prerequisite')
+            ORDER BY 
+                embedding <=> CAST(:query_embedding AS vector)
+            LIMIT 30
+            """),
+            {
+                "query_embedding": embedded_text,
+                "source_college": college_name,
+            }
+        ).fetchall()
+
+        # Combine results
+        combined = specific_chunks + general_chunks
+        vector_db.close()
         return [
             {
                 "id": row[0],
