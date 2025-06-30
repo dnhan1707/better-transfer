@@ -214,7 +214,6 @@ class VectorStore:
                 AND major_name = :target_major 
             ORDER BY 
                 embedding <=> CAST(:query_embedding AS vector)
-            LIMIT 30
             """),
             {
                 "query_embedding": embedded_text,
@@ -239,10 +238,9 @@ class VectorStore:
                 {self.table_name_v2}
             WHERE 
                 college_name = :source_college
-                AND chunk_type IN ('course_description', 'prerequisite')
+                AND chunk_type IN ('class', 'prerequisite')
             ORDER BY 
                 embedding <=> CAST(:query_embedding AS vector)
-            LIMIT 30
             """),
             {
                 "query_embedding": embedded_text,
@@ -252,6 +250,8 @@ class VectorStore:
 
         # Combine results
         combined = specific_chunks + general_chunks
+        print(f"Specific chunk: \n")
+        print(specific_chunks)
         vector_db.close()
         return [
             {

@@ -106,6 +106,8 @@ class TransferPlanService:
                 Required: All courses and prerequisites needed to transfer successfully, including any acceptable alternative courses that may satisfy the same requirements.
                 """
                 # Use vector_db for vector search with string values
+                print("Triggering query for: \n")
+                print(query)
                 vector_res = await self.vector_store.vector_search_v2(db, query, request)
                 result = await self.synthesizer.generate_response(question=query, vector_res=vector_res)
                 

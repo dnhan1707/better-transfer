@@ -37,7 +37,8 @@ class SynthesizerSettings(BaseModel):
         - The retrieved context may be incomplete or contain irrelevant details due to cosine similarity-based retrieval.
         - Some courses have prerequisites that must be taken beforehand — always respect prerequisite chains.
         - Some university course requirements may be satisfied by alternative courses — include all valid options.
-
+        - Only include courses explicitly mentioned in the retrieved context. Do not add courses based on general knowledge about educational requirements.
+                               
         Your goals:
         1. Ensure a diverse mix of course types (e.g., STEM, GE, electives) in each term.
         2. Balance the difficulty level across all terms as evenly as possible.
