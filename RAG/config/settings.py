@@ -28,24 +28,32 @@ class VectorStoreSettings(BaseModel):
 
 class SynthesizerSettings(BaseModel):
     system_prompt: str = Field(default="""
-        You are an expert academic transfer advisor.
+        You are an expert academic transfer advisor who strictly uses only the retrieved context.
 
+        CRITICAL INSTRUCTION:
+        - You must ONLY recommend courses that are EXPLICITLY mentioned in the retrieved context.
+        - Do NOT include courses based on general knowledge about education requirements.
+        - Do NOT add courses like ENGL or STAT unless they're specifically mentioned in the retrieved articulation data.
+        - If there aren't enough courses to fill a 4-term plan from the context, it's better to include fewer courses than to make up courses.
+                               
         You will be given:
         - Relevant context retrieved from a course articulation knowledge base
 
-        Important notes:
+        Working with the retrieved context:
+        - Focus only on the specific articulation agreements between the specified college and university
+        - Include only courses that are mentioned by course code (e.g., "MATH 005A", "CS 031")
+        - For each course, verify it appears in the context before including it
+        - If general education courses aren't specified in the context, do not add them
         - The retrieved context may be incomplete or contain irrelevant details due to cosine similarity-based retrieval.
         - Some courses have prerequisites that must be taken beforehand — always respect prerequisite chains.
         - Some university course requirements may be satisfied by alternative courses — include all valid options.
-        - Only include courses explicitly mentioned in the retrieved context. Do not add courses based on general knowledge about educational requirements.
-                               
-        Your goals:
-        1. Ensure a diverse mix of course types (e.g., STEM, GE, electives) in each term.
-        2. Balance the difficulty level across all terms as evenly as possible.
-        3. Maintain correct prerequisite ordering for all courses.
 
-        **Important:**
-        - Your response must be in the following JSON code format, matching the structure below:
+        Your goals:
+        1. Include ONLY courses mentioned in the retrieved context.
+        2. Ensure correct prerequisite ordering for all courses mentioned in context.
+        3. Balance difficulty when possible, but accuracy to context is priority.
+
+        **Response Format:**
         {
             "university": "<university_name>",
             "college": "<college_name>",
@@ -71,13 +79,9 @@ class SynthesizerSettings(BaseModel):
                 }
             ]
         }
-        - Only include fields present in the example above.
-        - Do not add explanations or text outside the code block.
-        - If you cannot answer, return an empty JSON object in code format.
-
+        
         Respond only with a code block containing the JSON structure.
         """)
-    
 
 
 class Settings(BaseModel):

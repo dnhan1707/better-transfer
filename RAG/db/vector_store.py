@@ -3,7 +3,6 @@ from typing import Dict, Any, List
 from RAG.services.embedding_services import EmbeddingService
 from app.schemas.transferPlanRequest import TransferPlanRequest
 from RAG.config.settings import get_settings
-from app.db.queries.institution_queries import db_get_basic_info
 from app.db.connection import get_vector_db
 
 class VectorStore:
@@ -12,9 +11,11 @@ class VectorStore:
         self.dimensions = settings.vector_store.embedding_dimensions
         self.table_name = settings.vector_store.table_name
         self.table_name_v2 = "knowledge_chunks_v2"
+        self.vector_db = get_vector_db()
+      
         
-    async def create_vector_table(self, db):
-        db.execute(
+    async def create_vector_table(self):
+        self.vector_db.execute(
             text(f"""
             CREATE EXTENSION IF NOT EXISTS vector;
             CREATE TABLE IF NOT EXISTS {self.table_name} (
@@ -34,10 +35,11 @@ class VectorStore:
             CREATE INDEX ON {self.table_name} USING hnsw (embedding vector_cosine_ops);
             """)
         )
-        db.commit()
+        self.vector_db.commit()
     
-    async def create_vector_table_v2(self, db):
-        db.execute(
+
+    async def create_vector_table_v2(self):
+        self.vector_db.execute(
             text(f"""
             CREATE EXTENSION IF NOT EXISTS vector;
             DROP TABLE IF EXISTS {self.table_name_v2};
@@ -65,11 +67,12 @@ class VectorStore:
             CREATE INDEX idx_{self.table_name_v2}_college_chunk ON {self.table_name_v2} (college_name, chunk_type);
             """)
         )
-        db.commit()
+        self.vector_db.commit()
 
-    async def insert_chunk(self, db, chunk: Dict[str, Any], embedding: List[float]):
+
+    async def insert_chunk(self, chunk: Dict[str, Any], embedding: List[float]):
         """Insert a single chunk with embedding into the vector database"""
-        db.execute(
+        self.vector_db.execute(
             text(f"""
             INSERT INTO {self.table_name}
             (content, embedding, college_id, college_name, university_id, university_name, 
@@ -90,16 +93,18 @@ class VectorStore:
                 "chunk_type": chunk.get("chunk_type", "general"),
             }
         )
-        db.commit()
+        self.vector_db.commit()
 
-    async def insert_chunks(self, db, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
+
+    async def insert_chunks(self, chunks: List[Dict[str, Any]],  embeddings: List[List[float]]):
         # Insert multiple chunks
         for i, chunk in enumerate(chunks):
-            await self.insert_chunk(db, chunk, embeddings[i])
+            await self.insert_chunk(chunk, embeddings[i])
 
-        db.commit()
+        self.vector_db.commit()
         
-    async def vector_search(self, db, input_text: str, transferRequest: TransferPlanRequest):
+
+    async def vector_search(self, input_text: str, transferRequest: TransferPlanRequest):
         """
         Search for similar content using vector similarity
         """
@@ -107,7 +112,7 @@ class VectorStore:
         embedded_text = await embedding_service.create_embedding(input_text)
 
         # Specific chunks for articulation / major-university match
-        specific_chunks = db.execute(
+        specific_chunks = self.vector_db.execute(
             text(f"""
             SELECT 
                 id,
@@ -136,7 +141,7 @@ class VectorStore:
         ).fetchall()
 
         # General course info (description + prerequisite)
-        general_chunks = db.execute(
+        general_chunks = self.vector_db.execute(
             text(f"""
             SELECT 
                 id,
@@ -178,25 +183,15 @@ class VectorStore:
         ]
 
 
-    async def vector_search_v2(self, db, input_text: str, transferRequest: TransferPlanRequest):
+    async def vector_search_v2(self, input_text: str, basic_info: Dict[str, Any]):
         """
         Search for similar content using vector similarity
         """
         embedding_service = EmbeddingService()
         embedded_text = await embedding_service.create_embedding(input_text)
-
-        # Find basic info
-        basic_info = db_get_basic_info(db, transferRequest)
-        print(basic_info)
-        # Extract string values from objects
-        college_name = basic_info["college"].college_name
-        university_name = basic_info["university"].university_name 
-        major_name = basic_info["major"].major_name 
         
-
-        vector_db = get_vector_db()
         # Specific chunks for articulation / major-university match
-        specific_chunks = vector_db.execute(
+        specific_chunks = self.vector_db.execute(
             text(f"""
             SELECT 
                 id,
@@ -217,14 +212,14 @@ class VectorStore:
             """),
             {
                 "query_embedding": embedded_text,
-                "source_college": college_name,
-                "target_university": university_name,
-                "target_major": major_name,
+                "source_college": basic_info["college"].college_name,
+                "target_university": basic_info["university"].university_name,
+                "target_major": basic_info["major"].major_name
             }
         ).fetchall()
 
         # General course info (description + prerequisite)
-        general_chunks = vector_db.execute(
+        general_chunks = self.vector_db.execute(
             text(f"""
             SELECT 
                 id,
@@ -244,7 +239,7 @@ class VectorStore:
             """),
             {
                 "query_embedding": embedded_text,
-                "source_college": college_name,
+                "source_college": basic_info["college"].college_name
             }
         ).fetchall()
 
@@ -252,7 +247,7 @@ class VectorStore:
         combined = specific_chunks + general_chunks
         print(f"Specific chunk: \n")
         print(specific_chunks)
-        vector_db.close()
+        self.vector_db.close()
         return [
             {
                 "id": row[0],

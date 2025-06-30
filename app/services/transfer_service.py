@@ -87,7 +87,6 @@ class TransferPlanService:
     async def create_RAG_transfer_plan_v2(self, db: Session, request: TransferPlanRequest):
         try:
             # Properly get app database connection - use next() on the generator
-            # app_db = get_db()
             
             try:
                 # Get basic info with proper error handling
@@ -108,7 +107,7 @@ class TransferPlanService:
                 # Use vector_db for vector search with string values
                 print("Triggering query for: \n")
                 print(query)
-                vector_res = await self.vector_store.vector_search_v2(db, query, request)
+                vector_res = await self.vector_store.vector_search_v2(query, basic_info)
                 result = await self.synthesizer.generate_response(question=query, vector_res=vector_res)
                 
                 return result
