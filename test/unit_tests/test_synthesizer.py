@@ -1,6 +1,6 @@
 import pytest
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 from RAG.services.synthesizer import Synthesizer
 
 @pytest.mark.asyncio
@@ -18,4 +18,11 @@ async def test_vector_result_to_json():
 
 @pytest.mark.asyncio
 async def test_generate_response():
-    pass
+    synthesizer = Synthesizer()
+    synthesizer.client.chat.completions.create = MagicMock(
+        return_value=MagicMock(
+            choices=[MagicMock(message=MagicMock(content='{"answer": "ok"}'))]
+        )
+    )
+    result = await synthesizer.generate_response("hi", [])
+    assert result == {"answer": "ok"}

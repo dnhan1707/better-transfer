@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class TransferPlanRequest(BaseModel):
@@ -8,7 +8,7 @@ class TransferPlanRequest(BaseModel):
     major_id: int = Field(..., description="Major Id")
     number_of_terms: int = Field(default=4, description="Number of Semesters")
 
-    @validator('college_id', 'university_id', 'major_id')
+    @field_validator('college_id', 'university_id', 'major_id')
     def validate_ids_positive(cls, v):
         if v <= 0:
             raise ValueError("IDs must be positive integers")
