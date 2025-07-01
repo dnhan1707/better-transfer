@@ -50,5 +50,13 @@ def create_transfer_router() -> APIRouter:
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     
-    
+
+    @router.post("v1/rag/batch")
+    async def RAG_transfer_plan_batch_v1(
+        request,
+        db: Session = Depends(get_db)
+    ):
+        pass
+
+
     return router
