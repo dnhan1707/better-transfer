@@ -1,10 +1,8 @@
-from app.db.connection import get_db
 import pytest
+from unittest.mock import MagicMock
 
 @pytest.fixture
 def db():
-    connection = get_db()
-    try:
-        yield connection
-    finally:
-        connection.close()
+    """Return a mocked database session."""
+    db = MagicMock()
+    return db

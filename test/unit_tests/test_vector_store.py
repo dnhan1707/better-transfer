@@ -1,7 +1,7 @@
 import pytest
-import asyncio
 from unittest.mock import MagicMock, patch
 from RAG.db.vector_store import VectorStore
+from RAG.services.chunker_service import ChunkerService
 from app.schemas.transferPlanRequest import TransferPlanRequest
 
 
@@ -16,7 +16,7 @@ def db_mock():
 @pytest.mark.asyncio
 async def test_create_vector_table(db_mock):
     vector_store = VectorStore()
-    await vector_store.create_vector_table(db=db_mock)
+    await vector_store.create_vector_table_v2(vector_db=db_mock)
 
     db_mock.execute.assert_called_once()
     db_mock.commit.assert_called_once()
@@ -24,7 +24,7 @@ async def test_create_vector_table(db_mock):
 
 @pytest.mark.asyncio
 async def test_insert_chunk(db_mock):
-    vector_store = VectorStore()
+    service = ChunkerService()
 
     chunk = {
         "content": "Test content",
@@ -32,7 +32,7 @@ async def test_insert_chunk(db_mock):
         "college_name": "Test College"
     }
     embedding = [0.1] * 1536  # 1536 dimensions
-    await vector_store.insert_chunk(db=db_mock, chunk=chunk, embedding=embedding)
+    await service.insert_chunk(db=db_mock, chunk=chunk, embedding=embedding)
 
     db_mock.execute.assert_called_once()
     db_mock.commit.assert_called_once()
@@ -57,7 +57,7 @@ async def test_vector_search(db_mock):
     with patch("RAG.services.embedding_services.EmbeddingService.create_embedding",
                return_value=[0.1]*1536):
         request = TransferPlanRequest(college_id=1, university_id=1, major_id=1)
-        results = await vector_store.vector_search(db_mock, "test query", request)
+        results = await vector_store.vector_search_v2(db_mock, "test query", request)
         
         assert len(results) == 1
         assert results[0]["content"] == "content1"
