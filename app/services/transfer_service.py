@@ -16,36 +16,27 @@ class TransferPlanService:
         self.synthesizer = Synthesizer()
 
 
-    async def create_RAG_transfer_plan_v2(self, db: Session, request: TransferPlanRequest):
-        try:
-            # Properly get app database connection - use next() on the generator
+    async def create_RAG_transfer_plan_v2(self, app_db: Session, vector_db: Session, request: TransferPlanRequest):
+        try:            
+            basic_info = db_get_basic_info(app_db, request)
             
-            try:
-                # Get basic info with proper error handling
-                basic_info = db_get_basic_info(db, request)
-                
-                if not basic_info:
-                    logger.error("Basic information not found")
-                    return {"error": "Institution information not found"}
-                
-                # Access .name properties of the model objects
-                query = f"""
-                Transfer plan for {basic_info["major"].major_name} major.
-                Target university: {basic_info["university"].university_name}.
-                Starting college: {basic_info["college"].college_name}.
-                Duration: {request.number_of_terms} terms.
-                Required: All courses and prerequisites needed to transfer successfully, including any acceptable alternative courses that may satisfy the same requirements.
-                """
+            if not basic_info:
+                logger.error("Basic information not found")
+                return {"error": "Institution information not found"}
+            
+            # Access .name properties of the model objects
+            query = f"""
+            Transfer plan for {basic_info["major"].major_name} major.
+            Target university: {basic_info["university"].university_name}.
+            Starting college: {basic_info["college"].college_name}.
+            Duration: {request.number_of_terms} terms.
+            Required: All courses and prerequisites needed to transfer successfully, including any acceptable alternative courses that may satisfy the same requirements.
+            """
 
-                vector_res = await self.vector_store.vector_search_v2(query, basic_info)
-                result = await self.synthesizer.generate_response(question=query, vector_res=vector_res)
-                
-                return result
-                
-            finally:
-                # Make sure to close the app_db connection
-                db.close()
+            vector_res = await self.vector_store.vector_search_v2(vector_db, query, basic_info)
+            return await self.synthesizer.generate_response(question=query, vector_res=vector_res)
             
+        
         except Exception as e:
             logger.error(f"Error RAG creating transfer plan: {str(e)}")
             traceback.print_exc()
