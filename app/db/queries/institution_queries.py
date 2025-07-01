@@ -32,9 +32,7 @@ def db_get_basic_info(db: Session, request: TransferPlanRequest) -> Dict[str, An
         college = db_get_college_by_id(db, request.college_id)
         university = db_get_university_by_id(db, request.university_id)
         major = db_get_major_by_id(db, request.major_id)
-        print(college)
-        print(university)
-        print(major)
+
         if(not college or not university or not major):
             logger.error(f"College: {college}")
             logger.error(f"University: {university}")

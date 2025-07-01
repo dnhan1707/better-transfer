@@ -32,9 +32,8 @@ The backend is built with **FastAPI** and stores transfer knowledge in a dedicat
    ```bash
    alembic init alembic
    alembic revision --autogenerate -m "create models"
-   python scripts/seed_database.py
-   python scripts/create_vector_table.py
-   python scripts/add_embedding.py
+   python scripts/seed_better_transfer_db.py
+   python scripts/seed_embedding_vector_db.py
    ```
 
 ## Running the API

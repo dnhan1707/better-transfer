@@ -245,8 +245,6 @@ class VectorStore:
 
         # Combine results
         combined = specific_chunks + general_chunks
-        print(f"Specific chunk: \n")
-        print(specific_chunks)
         self.vector_db.close()
         return [
             {
