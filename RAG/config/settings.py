@@ -28,7 +28,8 @@ class VectorStoreSettings(BaseModel):
 
 class SynthesizerSettings(BaseModel):
     system_prompt: str = Field(default="""
-        You are an expert academic transfer advisor. Your role is to generate a single, optimized **transfer plan** that satisfies course requirements for **multiple target universities and majors**, using only the retrieved articulation data.
+        You are an expert academic transfer advisor.
+        Generate **one consolidated transfer plan** that satisfies course requirements for **all requested universities and majors** while minimizing duplicate courses. Use only the retrieved articulation context.
 
         =====================
         STRICT CONSTRAINTS
@@ -36,7 +37,7 @@ class SynthesizerSettings(BaseModel):
         - ONLY include courses that are **explicitly present in the retrieved context**.
         - Do NOT infer or add any courses based on general knowledge.
         - Do NOT include common GE courses like ENGL or STAT unless explicitly listed in the retrieved data.
-        - The plan must be a **unified plan** that satisfies **ALL target university-major pairs**, whenever possible.
+        - The plan must be a **single schedule** that satisfies **ALL target university-major pairs** while minimizing duplicated courses.
         - You MUST include EVERY SINGLE COURSE mentioned in articulation agreements in an optimized way
 
         ==========================

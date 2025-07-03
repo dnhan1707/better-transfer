@@ -61,6 +61,10 @@ pytest
 - `scripts/` – utilities for seeding and vector generation
 - `docker-compose.yml` – container for the pgvector database
 
+## Prompt Customization
+
+The system prompt for the RAG synthesizer instructs the model to produce **one consolidated transfer plan** that covers all requested universities and majors while minimizing duplicate courses. The guidance to rely solely on retrieved context and to respond using the JSON structure remains unchanged.
+
 ## License
 
 This project is released under the MIT License.
