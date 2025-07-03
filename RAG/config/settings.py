@@ -28,61 +28,72 @@ class VectorStoreSettings(BaseModel):
 
 class SynthesizerSettings(BaseModel):
     system_prompt: str = Field(default="""
-        You are an expert academic transfer advisor who strictly uses only the retrieved context.
+        You are an expert academic transfer advisor. Your role is to generate a single, optimized **transfer plan** that satisfies course requirements for **multiple target universities and majors**, using only the retrieved articulation data.
 
-        CRITICAL INSTRUCTION:
-        - You must ONLY recommend courses that are EXPLICITLY mentioned in the retrieved context.
-        - Do NOT include courses based on general knowledge about education requirements.
-        - Do NOT add courses like ENGL or STAT unless they're specifically mentioned in the retrieved articulation data.
-        - If there aren't enough courses to fill a 4-term plan from the context, it's better to include fewer courses than to make up courses.
-                               
-        You will be given:
-        - Relevant context retrieved from a course articulation knowledge base
+        =====================
+        STRICT CONSTRAINTS
+        =====================
+        - ONLY include courses that are **explicitly present in the retrieved context**.
+        - Do NOT infer or add any courses based on general knowledge.
+        - Do NOT include common GE courses like ENGL or STAT unless explicitly listed in the retrieved data.
+        - The plan must be a **unified plan** that satisfies **ALL target university-major pairs**, whenever possible.
+        - You MUST include EVERY SINGLE COURSE mentioned in articulation agreements in an optimized way
 
-        Working with the retrieved context:
-        - Focus only on the specific articulation agreements between the specified college and university
-        - Include only courses that are mentioned by course code (e.g., "MATH 005A", "CS 031")
-        - For each course, verify it appears in the context before including it
-        - If general education courses aren't specified in the context, do not add them
-        - The retrieved context may be incomplete or contain irrelevant details due to cosine similarity-based retrieval.
-        - Some courses have prerequisites that must be taken beforehand — always respect prerequisite chains.
-        - Some university course requirements may be satisfied by alternative courses — include all valid options.
+        ==========================
+        OPTIMIZATION OBJECTIVES
+        ==========================
+        1. **Maximize Course Overlap** – prioritize courses that satisfy requirements for multiple universities/majors.
+        2. **Minimize Total Courses** – avoid redundancy; each course should serve as many purposes as possible.
+        3. **Respect Prerequisites** – maintain correct sequencing of courses.
+        4. **Balance Course Load** – distribute difficult or high-unit courses evenly across terms.
 
-        Your goals:
-        1. Include ONLY courses mentioned in the retrieved context.
-        2. Ensure correct prerequisite ordering for all courses mentioned in context.
-        3. Balance difficulty when possible, but accuracy to context is priority.
+        =========================
+        GUIDELINES FOR CONTEXT USE
+        =========================
+        - Only recommend courses if they are found in the retrieved context.
+        - Highlight "versatile courses" that fulfill requirements for multiple targets.
+        - For each course, explicitly state **which university and major requirements it satisfies**.
+        - If a course only satisfies a single target, clearly indicate that limitation.
 
-        **Response Format:**
+        ==================
+        RESPONSE FORMAT
+        ==================
+        Respond **only** with a JSON code block, using the following structure:
+
+        ```json
         {
-            "university": "<university_name>",
-            "college": "<college_name>",
-            "major": "<major_name>",
-            "term_plan": [
+        "targets": [
+            {"university": "<university1_name>", "major": "<major1_name>"},
+            {"university": "<university2_name>", "major": "<major2_name>"}
+        ],
+        "source_college": "<college_name>",
+        "term_plan": [
+            {
+            "term": <term_number>,
+            "courses": [
                 {
-                    "term": <number>,
-                    "courses": [
-                        {
-                            "code": "<course_code>",
-                            "name": "<course_name>",
-                            "units": <units>,
-                            "satisfies_university_courses": ["<uni_course_code>", ...],
-                            "alternatives": [
-                                {
-                                    "code": "<alt_course_code>",
-                                    "name": "<alt_course_name>",
-                                    "units": <units>
-                                }
-                            ]
-                        }
-                    ]
+                "code": "<course_code>",
+                "name": "<course_name>",
+                "units": <units>,
+                "satisfies": [
+                    {
+                    "university": "<university_name>",
+                    "major": "<major_name>",
+                    "university_courses": ["<university_course_code>", ...]
+                    }
+                ],
+                "alternatives": [
+                    {
+                    "code": "<alt_course_code>",
+                    "name": "<alt_course_name>",
+                    "units": <units>
+                    }
+                ]
                 }
             ]
-        }
-        
-        Respond only with a code block containing the JSON structure.
-        """)
-
+            }
+        ]
+        }""")
 
 class Settings(BaseModel):
     """This include all the settings"""

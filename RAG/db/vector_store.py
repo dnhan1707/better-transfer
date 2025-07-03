@@ -1,6 +1,6 @@
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from typing import Dict, Any
+from typing import Dict, Any, List
 from RAG.services.embedding_services import EmbeddingService
 from RAG.config.settings import get_settings
 
@@ -44,51 +44,48 @@ class VectorStore:
         vector_db.commit()
 
 
-    async def vector_search_v2(self, vector_db: Session, input_text: str, basic_info: Dict[str, Any]):
-        """
-        Search for similar content using vector similarity
-        """
+    async def vector_search_v2(self, vector_db: Session, input_text: str, target_combinations: List[Dict]):
+        """Search for similar content using vector similarity across multiple targets"""
         embedding_service = EmbeddingService()
         embedded_text = await embedding_service.create_embedding(input_text)
         
-        # Specific chunks for articulation / major-university match
-        specific_chunks = vector_db.execute(
-            text(f"""
-            SELECT 
-                id,
-                content, 
-                college_name, 
-                university_name, 
-                major_name, 
-                chunk_type,
-                1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
-            FROM 
-                {self.table_name_v2}
-            WHERE 
-                college_name = :source_college
-                AND university_name = :target_university
-                AND major_name = :target_major 
-            ORDER BY 
-                embedding <=> CAST(:query_embedding AS vector)
-            """),
-            {
-                "query_embedding": embedded_text,
-                "source_college": basic_info["college"].college_name,
-                "target_university": basic_info["university"].university_name,
-                "target_major": basic_info["major"].major_name
-            }
-        ).fetchall()
-
-        # General course info (description + prerequisite)
+        combined_results = []
+        college_name = target_combinations[0]["college"]  # All have same source college
+        
+        # Get specific chunks for each university-major combination
+        for target in target_combinations:
+            university_name = target["university"]
+            major_name = target["major"]
+            
+            specific_chunks = vector_db.execute(
+                text(f"""
+                SELECT 
+                    id, content, college_name, university_name, major_name, chunk_type,
+                    1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+                FROM 
+                    {self.table_name_v2}
+                WHERE 
+                    college_name = :source_college
+                    AND university_name = :target_university
+                    AND major_name = :target_major 
+                ORDER BY 
+                    embedding <=> CAST(:query_embedding AS vector)
+                """),
+                {
+                    "query_embedding": embedded_text,
+                    "source_college": college_name,
+                    "target_university": university_name,
+                    "target_major": major_name
+                }
+            ).fetchall()
+            
+            combined_results.extend(specific_chunks)
+        
+        # Get general course info (shared across all targets)
         general_chunks = vector_db.execute(
             text(f"""
             SELECT 
-                id,
-                content, 
-                college_name, 
-                university_name, 
-                major_name, 
-                chunk_type,
+                id, content, college_name, university_name, major_name, chunk_type,
                 1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
             FROM 
                 {self.table_name_v2}
@@ -100,13 +97,14 @@ class VectorStore:
             """),
             {
                 "query_embedding": embedded_text,
-                "source_college": basic_info["college"].college_name
+                "source_college": college_name
             }
         ).fetchall()
-
-        # Combine results
-        combined = specific_chunks + general_chunks
-        vector_db.close()
+        
+        # Combine and format results
+        combined_results.extend(general_chunks)
+        
+        # Format results to include which target they're for
         return [
             {
                 "id": row[0],
@@ -117,5 +115,5 @@ class VectorStore:
                 "chunk_type": row[5],
                 "similarity": row[6]
             }
-            for row in combined
+            for row in combined_results
         ]

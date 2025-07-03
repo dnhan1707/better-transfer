@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.connection import get_db, get_vector_db
 from app.services.transfer_service import TransferPlanService
-from app.schemas.transferPlanRequest import TransferPlanRequest
+from app.schemas.transferPlanRequest import FullRequest
 
 
 def create_transfer_router() -> APIRouter:
@@ -14,7 +14,7 @@ def create_transfer_router() -> APIRouter:
         
     @router.post("/v2/rag")
     async def rag_transfer_plan_v2(
-        request:     TransferPlanRequest,
+        request:     FullRequest,
         app_db:      Session = Depends(get_db),
         vector_db:   Session = Depends(get_vector_db), 
     ):
