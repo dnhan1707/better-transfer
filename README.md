@@ -12,6 +12,16 @@ The backend is built with **FastAPI** and stores transfer knowledge in a dedicat
 - Helper scripts to seed data and populate embeddings
 - Docker compose configuration for the vector database
 
+## 📦 Sample Response
+
+This example shows how Better Transfer generates a plan that satisfies:
+- 🎯 **UCLA – Computer Science**
+- 🎯 **UC Berkeley – Data Science**
+- 🏫 From: **Pasadena City College**
+
+View the full optimized plan:  
+📄 [`examples/multi_university_sample.json`](./examples/multi_university_sample.json)
+
 ## Getting Started
 
 1. Install Python dependencies:
