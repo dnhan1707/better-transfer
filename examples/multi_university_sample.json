@@ -1,297 +1,389 @@
 {
-  "targets": [
-    {
-      "university": "University of California, Los Angeles",
-      "major": "Computer Science"
-    },
-    {
-      "university": "University of California, Berkeley",
-      "major": "Data Science"
-    }
-  ],
-  "source_college": "Pasadena City College",
-  "term_plan": [
-    {
-      "term": 1,
-      "courses": [
+    "targets": [
         {
-          "code": "MATH 005A",
-          "name": "Single Variable Calculus I",
-          "units": 5,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 31A"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "MATH 1A"
-              ]
-            }
-          ],
-          "alternatives": []
+            "university": "University of California, Los Angeles",
+            "major": "Computer Science"
+        },
+        {
+            "university": "University of California, Berkeley",
+            "major": "Data Science"
         }
-      ]
-    },
-    {
-      "term": 2,
-      "courses": [
+    ],
+    "source_college": "Pasadena City College",
+    "term_plan": [
         {
-          "code": "MATH 005B",
-          "name": "Single Variable Calculus II",
-          "units": 5,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 31B"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "MATH 1B"
-              ]
-            }
-          ],
-          "alternatives": []
+            "term": 1,
+            "courses": [
+                {
+                    "id": 36,
+                    "code": "CS 002",
+                    "name": "Fundamentals of Computer Science I",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [],
+                    "satisfies": [],
+                    "alternatives": []
+                },
+                {
+                    "id": 111,
+                    "code": "MATH 005A",
+                    "name": "Single Variable Calculus I",
+                    "units": 5.0,
+                    "difficulty": 5,
+                    "prerequisites": [],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 31A"
+                            ]
+                        },
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "MATH 1A"
+                            ]
+                        }
+                    ],
+                    "alternatives": [
+                        {
+                            "need_placement": true
+                        }
+                    ]
+                },
+                {
+                    "id": 63,
+                    "code": "ENGL 001A",
+                    "name": "Reading and Composition",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "ENGCOMP 3"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
         },
         {
-          "code": "CS 002",
-          "name": "Fundamentals of Computer Science I",
-          "units": 4,
-          "satisfies": [],
-          "alternatives": []
+            "term": 2,
+            "courses": [
+                {
+                    "id": 37,
+                    "code": "CS 003A",
+                    "name": "Fundamentals of Computer Science II (C++)",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "CS 002"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "COM SCI 31"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 112,
+                    "code": "MATH 005B",
+                    "name": "Single Variable Calculus II",
+                    "units": 5.0,
+                    "difficulty": 5,
+                    "prerequisites": [
+                        "MATH 005A"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 31B"
+                            ]
+                        },
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "MATH 1B"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
+        },
+        {
+            "term": 3,
+            "courses": [
+                {
+                    "id": 41,
+                    "code": "CS 008",
+                    "name": "Fundamentals of Computer Science III - Data Structures",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "CS 003A"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "COM SCI 32"
+                            ]
+                        },
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "COMPSCI 61B"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 113,
+                    "code": "MATH 005C",
+                    "name": "Multivariable Calculus",
+                    "units": 5.0,
+                    "difficulty": 5,
+                    "prerequisites": [
+                        "MATH 005B"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 32A",
+                                "MATH 32B"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
+        },
+        {
+            "term": 4,
+            "courses": [
+                {
+                    "id": 45,
+                    "code": "CS 066",
+                    "name": "Assembly Language Programming for the Sciences and Mathematics",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "CS 002"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "COM SCI 33"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 117,
+                    "code": "MATH 010",
+                    "name": "Linear Algebra and Applications",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "MATH 005B"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 33A"
+                            ]
+                        },
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "MATH 54"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 121,
+                    "code": "MATH 055",
+                    "name": "Differential Equations",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "MATH 005B"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 33B"
+                            ]
+                        },
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "MATH 54"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
+        },
+        {
+            "term": 5,
+            "courses": [
+                {
+                    "id": 129,
+                    "code": "MATH 022",
+                    "name": "Discrete Mathematics",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "MATH 005A",
+                        "CS 002"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "MATH 61"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 153,
+                    "code": "PHYS 008A",
+                    "name": "Physics for Scientists and Engineers I: Mechanics",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "PHYSICS 1A"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 40,
+                    "code": "CS 006",
+                    "name": "Introduction to Applied Logic Design",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "CS 002"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "COM SCI M51A",
+                                "EC ENGR M16"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
+        },
+        {
+            "term": 6,
+            "courses": [
+                {
+                    "id": 157,
+                    "code": "CS 031",
+                    "name": "Introduction to Data Science",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Berkeley",
+                            "major": "Data Science",
+                            "university_courses": [
+                                "DATA C8"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 144,
+                    "code": "PHYS 008B",
+                    "name": "Physics for Scientists and Engineers II: Waves, Electricity & Magnetism",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "PHYS 008A"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "PHYSICS 1B"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                },
+                {
+                    "id": 143,
+                    "code": "PHYS 008C",
+                    "name": "Physics for Scientists and Engineers III: Thermodynamics, Optics, and Modern Physics",
+                    "units": 4.0,
+                    "difficulty": 4,
+                    "prerequisites": [
+                        "PHYS 008B"
+                    ],
+                    "satisfies": [
+                        {
+                            "university": "University of California, Los Angeles",
+                            "major": "Computer Science",
+                            "university_courses": [
+                                "PHYSICS 1C"
+                            ]
+                        }
+                    ],
+                    "alternatives": []
+                }
+            ]
         }
-      ]
-    },
-    {
-      "term": 3,
-      "courses": [
-        {
-          "code": "MATH 005C",
-          "name": "Multivariable Calculus",
-          "units": 5,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 32A",
-                "MATH 32B"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "CS 003A",
-          "name": "Fundamentals of Computer Science II (C++)",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "COM SCI 31"
-              ]
-            }
-          ],
-          "alternatives": []
-        }
-      ]
-    },
-    {
-      "term": 4,
-      "courses": [
-        {
-          "code": "CS 008",
-          "name": "Fundamentals of Computer Science III - Data Structures",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "COM SCI 32"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "COMPSCI 61B"
-              ]
-            }
-          ],
-          "alternatives": [
-            {
-              "code": "CS 003B",
-              "name": "Fundamentals of Computer Science (Java)",
-              "units": 4
-            }
-          ]
-        },
-        {
-          "code": "MATH 055",
-          "name": "Differential Equations",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 33B"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "MATH 1B"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "MATH 54"
-              ]
-            }
-          ],
-          "alternatives": []
-        }
-      ]
-    },
-    {
-      "term": 5,
-      "courses": [
-        {
-          "code": "MATH 010",
-          "name": "Linear Algebra and Applications",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 33A"
-              ]
-            },
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "MATH 54"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "CS 006",
-          "name": "Introduction to Applied Logic Design",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "COM SCI M51A",
-                "EC ENGR M16"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "CS 031",
-          "name": "Introduction to Data Science",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Berkeley",
-              "major": "Data Science",
-              "university_courses": [
-                "DATA C8"
-              ]
-            }
-          ],
-          "alternatives": []
-        }
-      ]
-    },
-    {
-      "term": 6,
-      "courses": [
-        {
-          "code": "CS 066",
-          "name": "Assembly Language Programming for the Sciences and Mathematics",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "COM SCI 33"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "MATH 022",
-          "name": "Discrete Mathematics",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "MATH 61"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "PHYS 008A",
-          "name": "Physics for Scientists and Engineers I: Mechanics",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "PHYSICS 1A"
-              ]
-            }
-          ],
-          "alternatives": []
-        },
-        {
-          "code": "PHYS 008B",
-          "name": "Physics for Scientists and Engineers II: Waves, Electricity & Magnetism",
-          "units": 4,
-          "satisfies": [
-            {
-              "university": "University of California, Los Angeles",
-              "major": "Computer Science",
-              "university_courses": [
-                "PHYSICS 1B"
-              ]
-            }
-          ],
-          "alternatives": []
-        }
-      ]
-    }
-  ]
+    ]
 }

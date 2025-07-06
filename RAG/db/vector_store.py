@@ -60,19 +60,16 @@ class VectorStore:
             specific_chunks = vector_db.execute(
                 text(f"""
                 SELECT 
-                    id, content, college_name, university_name, major_name, chunk_type,
-                    1 - (embedding <=> CAST(:query_embedding AS vector)) as similarity
+                    id, content, college_name, university_name, major_name, chunk_type, 1 AS similarity
                 FROM 
                     {self.table_name_v2}
                 WHERE 
                     college_name = :source_college
                     AND university_name = :target_university
                     AND major_name = :target_major 
-                ORDER BY 
-                    embedding <=> CAST(:query_embedding AS vector)
+                    AND chunk_type IN ('articulation')
                 """),
                 {
-                    "query_embedding": embedded_text,
                     "source_college": college_name,
                     "target_university": university_name,
                     "target_major": major_name
