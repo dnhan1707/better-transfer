@@ -24,5 +24,5 @@ async def test_generate_response():
             choices=[MagicMock(message=MagicMock(content='{"answer": "ok"}'))]
         )
     )
-    result = await synthesizer.generate_response("hi", [])
+    result = await synthesizer.generate_response("hi", 6, [])
     assert result == {"answer": "ok"}
