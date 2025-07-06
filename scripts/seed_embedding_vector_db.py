@@ -7,8 +7,9 @@ import asyncio
 from RAG.db.vector_store import VectorStore
 from RAG.services.embedding_services import EmbeddingService
 from RAG.services.chunker_service import ChunkerService
+from RAG.services.caching_service import CachingService
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from dotenv import load_dotenv
 from pathlib import Path
 import json
@@ -21,8 +22,9 @@ RAG_DATABASE_URL = os.getenv("RAG_DATABASE_URL")
 vector_store = VectorStore()
 embedding_service = EmbeddingService()
 chunker_service = ChunkerService()
+caching_service = CachingService()
 
-async def process_seed_data(db):
+async def process_seed_data(db: Session):
     """Process course and prerequisite information from seed_data directory"""
     seed_dir = Path('RAG/db/seed_data')
     processed_files = 0
@@ -54,7 +56,7 @@ async def process_seed_data(db):
                 # Process classes if they exist
                 if classes:
                     # Create embeddings for classes
-                    class_embeddings = await embedding_service.batch_create_embedding(classes)
+                    class_embeddings = await embedding_service.batch_create_embedding(classes, db)
                     
                     # Insert each class with its embedding
                     for idx, class_content in enumerate(classes):
@@ -70,7 +72,7 @@ async def process_seed_data(db):
                 # Process prerequisites if they exist
                 if prerequisites:
                     # Create embeddings for prerequisites
-                    prereq_embeddings = await embedding_service.batch_create_embedding(prerequisites)
+                    prereq_embeddings = await embedding_service.batch_create_embedding(prerequisites, db)
                     
                     # Insert each prerequisite with its embedding
                     for idx, prereq_content in enumerate(prerequisites):
@@ -95,7 +97,7 @@ async def process_seed_data(db):
     print(f"Completed processing {processed_files} files in Phase 1")
     return processed_files
 
-async def process_articulation_data(db):
+async def process_articulation_data(db: Session):
     """Process articulation mappings from seed_articulation directory"""
     seed_dir = Path('RAG/db/seed_articulation')
     processed_files = 0
@@ -118,7 +120,7 @@ async def process_articulation_data(db):
                 
                 if course_mappings:
                     # Create embeddings for course mappings
-                    mapping_embeddings = await embedding_service.batch_create_embedding(course_mappings)
+                    mapping_embeddings = await embedding_service.batch_create_embedding(course_mappings, db)
                     
                     # Insert each mapping with its embedding
                     for idx, mapping_content in enumerate(course_mappings):
@@ -152,17 +154,18 @@ async def main():
     )
        
     Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    db = Session()
+    vector_db = Session()
     
     try:
         # Create table if it doesn't exist
-        await vector_store.create_vector_table_v2(db=db)
+        await vector_store.create_vector_table_v2(vector_db)
+        await caching_service.create_cache_table(vector_db)
         
         # PHASE 1: Process seed_data
-        seed_files = await process_seed_data(db)
+        seed_files = await process_seed_data(vector_db)
         
         # PHASE 2: Process articulation data
-        articulation_files = await process_articulation_data(db)
+        articulation_files = await process_articulation_data(vector_db)
         
         print(f"\nSummary: Processed {seed_files} seed data files and {articulation_files} articulation files")
             
@@ -170,7 +173,7 @@ async def main():
         print(f"An error occurred: {str(e)}")
         traceback.print_exc()
     finally:
-        db.close()
+        vector_db.close()
 
 if __name__ == "__main__":
     asyncio.run(main())
