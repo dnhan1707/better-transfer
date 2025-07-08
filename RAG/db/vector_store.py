@@ -45,10 +45,55 @@ class VectorStore:
 
 
     async def vector_search_v2(self, vector_db: Session, input_text: str, target_combinations: List[Dict]):
-        """Search for similar content using vector similarity across multiple targets"""
-        embedding_service = EmbeddingService()
-        embedded_text = await embedding_service.create_embedding(input_text)
+        """Search for similar content using vector similarity across multiple targets"""        
+        combined_results = await self.get_specific_chunks(vector_db, target_combinations)
+        general_chunks = await self.get_general_chunks(vector_db, target_combinations, input_text)
+        combined_results.extend(general_chunks)
         
+        return [
+            {
+                "id": row[0],
+                "content": row[1],
+                "college_name": row[2],
+                "university_name": row[3],
+                "major_name": row[4],
+                "chunk_type": row[5],
+                "similarity": row[6]
+            }
+            for row in combined_results
+        ]
+    
+    
+    async def get_courses_data(self, vector_db: Session, source_college: str):
+        courses_data = vector_db.execute(
+            text(f"""
+            SELECT 
+                id, content, college_name, university_name, major_name, chunk_type
+            FROM 
+                {self.table_name_v2}
+            WHERE 
+                college_name = :source_college
+                AND chunk_type IN ('class', 'prerequisite')
+            """),
+            {
+                "source_college": source_college
+            }
+        ).fetchall()
+
+        return [
+            {
+                "id": row[0],
+                "content": row[1],
+                "college_name": row[2],
+                "university_name": row[3],
+                "major_name": row[4],
+                "chunk_type": row[5],
+            }
+            for row in courses_data
+        ]
+
+
+    async def get_specific_chunks(self, vector_db: Session, target_combinations: List[Dict]):
         combined_results = []
         college_name = target_combinations[0]["college"]  # All have same source college
         
@@ -77,8 +122,16 @@ class VectorStore:
             ).fetchall()
             
             combined_results.extend(specific_chunks)
-        
-        # Get general course info (shared across all targets)
+
+        return combined_results
+    
+
+    async def get_general_chunks(self, vector_db: Session, target_combinations: List[Dict], input_text: str):
+        combined_results = []
+        embedding_service = EmbeddingService()
+        embedded_text = await embedding_service.create_embedding(input_text, vector_db)
+        college_name = target_combinations[0]["college"]  # All have same source college
+
         general_chunks = vector_db.execute(
             text(f"""
             SELECT 
@@ -100,17 +153,4 @@ class VectorStore:
         
         # Combine and format results
         combined_results.extend(general_chunks)
-        
-        # Format results to include which target they're for
-        return [
-            {
-                "id": row[0],
-                "content": row[1],
-                "college_name": row[2],
-                "university_name": row[3],
-                "major_name": row[4],
-                "chunk_type": row[5],
-                "similarity": row[6]
-            }
-            for row in combined_results
-        ]
+        return combined_results
