@@ -91,7 +91,6 @@ class Synthesizer:
                 "term": <int>,                 // 1 … {number_of_terms}
                 "courses": [
                     {{
-                    "id": <row_id>,            // echo if provided
                     "code": "<PCC_course_code>",
                     "name": "<PCC_course_name>",
                     "units": <float>,
@@ -132,6 +131,40 @@ class Synthesizer:
         logger.debug("Parsed response: %s", json_response)
         return json_response
 
+
+    async def generate_reorder_plan_response(self, question: str, courses_data):
+        json_context = await self.vector_result_to_json(courses_data)
+        system_prompt = f"""
+            You are an expert academic advisor responsible for reorganizing a student's transfer plan 
+            after they've marked some courses as already taken.
+            
+            Your task is to:
+            1. Remove courses that are marked as "taken" from the plan
+            2. Redistribute remaining courses across the same number of terms
+            3. Respect all prerequisite requirements
+            4. Balance course difficulty across terms
+            5. Ensure a variety of course types in each term
+            6. Preserve the overall structure and format of the plan
+            
+            IMPORTANT CONSTRAINTS:
+            - Do NOT add any new courses that weren't in the original plan
+            - Maintain the same number of terms as the original plan
+            - Keep all required courses from the original plan that haven't been taken
+            - If a prerequisite has been taken, courses dependent on it can be moved earlier
+            - Output must follow the exact same JSON format as the original plan
+            
+        """
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f"# User question:\n{question}\n\n# Retrieved information:\n{json_context}"}
+            ],
+            response_format={"type": "json_object"}
+        )
+        json_response = json.loads(response.choices[0].message.content)
+        logger.debug("Parsed response: %s", json_response)
+        return json_response
 
     async def vector_result_to_json(self, vector_res):
         return json.dumps(vector_res, ensure_ascii=False, indent=2)

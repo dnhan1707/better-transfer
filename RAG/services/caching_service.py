@@ -22,8 +22,8 @@ class CachingService:
             SELECT embedding FROM embedding_cache 
             WHERE content_hash = :content_hash
             """
-        res = await vector_db.execute(
-            query,
+        res = vector_db.execute(
+            text(query),
             {"content_hash": content_hash}
         )
         row = res.fetchone()
@@ -37,12 +37,12 @@ class CachingService:
             VALUES (:content_hash, :content, :embedding)
             ON CONFLICT (content_hash) DO NOTHING
             """
-        await vector_db.execute(query, {
+        vector_db.execute(text(query), {
             "content_hash": content_hash, 
             "content": content,
             "embedding": embedding
         })
-        await vector_db.commit()
+        vector_db.commit()
 
     def _hash_content(self, content):
         """Create normalized hash of content for lookup"""
