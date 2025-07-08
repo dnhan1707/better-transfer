@@ -24,14 +24,12 @@ def create_transfer_router() -> APIRouter:
             raise HTTPException(status_code=500, detail=str(e))
 
 
-    @router.post("/v1/reorder")
-    async def re_order_plan_v1(
+    @router.post("/v2/reorder")
+    async def re_order_plan_v2(
         request:     ReOrderRequestModel, 
-        app_db:      Session = Depends(get_db),
-        vector_db:   Session = Depends(get_vector_db), 
     ):
         try:
-            return await transfer_plan_service.re_order_transfer_plan_v1(app_db, vector_db, request)
+            return await transfer_plan_service.re_order_transfer_plan_v2(request)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
