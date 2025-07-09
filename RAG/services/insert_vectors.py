@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-from app.db.connection import get_db
 from RAG.services.knowledge_chunker import KnowledgeChunker
 from RAG.services.embedding_services import EmbeddingService
 from RAG.db.vector_store import VectorStore

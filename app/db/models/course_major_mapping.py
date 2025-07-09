@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 
 class CourseMajorMapping(Base):
     __tablename__ = "course_major_mappings"

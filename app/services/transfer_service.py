@@ -126,7 +126,7 @@ class TransferPlanService:
             remaining_courses = await self.filter_taken_course(taken_courses, all_courses, prerequisite_data)
             
             # Create a new plan structure
-            new_plan = self._create_plan_structure(original_plan)
+            new_plan = await self._create_plan_structure(original_plan)
             
             # Build course dependency graph
             course_graph = await self._build_course_graph(remaining_courses, prerequisite_data)
@@ -188,7 +188,7 @@ class TransferPlanService:
         logger.debug(f"Removed {len(all_taken)} courses ({len(taken_courses)} explicit + {len(all_taken) - len(taken_courses)} implicit)")
         return filtered_courses
                     
-    def _create_plan_structure(self, original_plan):
+    async def _create_plan_structure(self, original_plan):
         """Create empty plan with same structure as original."""
         new_plan = {
             "targets": original_plan["targets"],
@@ -220,7 +220,7 @@ class TransferPlanService:
                 "data": course,
                 "prerequisites": [],
                 "difficulty": course.get("difficulty", 3),
-                "department": self._get_department(code),
+                "department": await self._get_department(code),
                 "earliest_term": 1
             }
             
@@ -237,11 +237,11 @@ class TransferPlanService:
         
         # Calculate earliest possible term for each course
         for code in course_graph:
-            self._calculate_earliest_term(code, course_graph, set())
+            await self._calculate_earliest_term(code, course_graph, set())
             
         return course_graph
         
-    def _calculate_earliest_term(self, code, graph, visited):
+    async def _calculate_earliest_term(self, code, graph, visited):
         """Recursively determine the earliest term a course can be placed in."""
         if code in visited:
             return  # Prevent cycles
@@ -260,7 +260,7 @@ class TransferPlanService:
                 
         graph[code]["earliest_term"] = max_term + 1
 
-    def _get_department(self, course_code):
+    async def _get_department(self, course_code):
         """Extract department code from course code."""
         return course_code.split(" ")[0]
 

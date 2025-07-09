@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 from app.db.models.articulation_group import ArticulationGroup
 
 class Colleges(Base):

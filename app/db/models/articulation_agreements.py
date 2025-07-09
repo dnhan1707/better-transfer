@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, String, Enum
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 import enum
 
 class ArticulationRelationshipType(enum.Enum):

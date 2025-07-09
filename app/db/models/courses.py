@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 
 
 class Courses(Base):

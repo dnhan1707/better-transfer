@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 # Remove this import to avoid circular import
 from app.db.models.expression_node import ExpressionNode
 

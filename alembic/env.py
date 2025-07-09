@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 from sqlalchemy import create_engine
 import os
 
