@@ -7,6 +7,7 @@ from app.utils.logging_config import get_logger
 import json
 import traceback
 from RAG.db.prereqisite_graph import prerequisite_graph
+from app.db.services.mongo_services import PrerequisiteService
 
 logger = get_logger(__name__)
 
@@ -15,7 +16,7 @@ class TransferPlanService:
     def __init__(self):
         self.vector_store = VectorStore()
         self.synthesizer = Synthesizer()
-
+        self.prerequisite_service = PrerequisiteService()
 
     async def create_RAG_transfer_plan_v2(self, app_db: Session, vector_db: Session, full_request: FullRequest):
         try:
@@ -113,8 +114,8 @@ class TransferPlanService:
             original_plan = request.original_plan.model_dump()
             source_college = original_plan["source_college"]  # Use dict access, not attribute
             
-            # Get prerequisite map
-            prerequisite_data = prerequisite_graph.get(source_college, {})
+            # Get prerequisite map from mongodb
+            prerequisite_data = await self.prerequisite_service.get_all_prerequisites(source_college)
             if not prerequisite_data:
                 logger.warning(f"No prerequisite data found for {source_college}")
                 return {"error": f"Prerequisite data not available for {source_college}"}

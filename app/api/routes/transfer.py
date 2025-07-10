@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.db.connection import get_db, get_vector_db
+from app.db.connection.pg_connection import get_db, get_vector_db
 from app.services.transfer_service import TransferPlanService
 from app.schemas.transferPlanRequest import FullRequest, ReOrderRequestModel
 

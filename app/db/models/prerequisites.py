@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, Enum
 import enum
 from sqlalchemy.orm import relationship
-from app.db.connection import Base
+from app.db.connection.pg_connection import Base
 
 
 class PrerequisiteType(enum.Enum):

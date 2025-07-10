@@ -12,7 +12,7 @@ async def seed_mongodb():
     print("Starting migration of prerequisite data to MongoDB...")
 
     mongo = MongoDB()
-    collection = await mongo.get_collection("pcc_course_prerequisites")
+    collection = mongo.get_collection("pcc_course_prerequisites")
     
     # Drop existing collection to start fresh
     collection.drop()
