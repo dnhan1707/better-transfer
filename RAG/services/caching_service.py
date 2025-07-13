@@ -7,6 +7,7 @@ class CachingService:
     async def create_cache_table(self, vector_db: Session):
         vector_db.execute(
             text("""
+                DROP TABLE IF EXISTS embedding_cache;
                 CREATE TABLE embedding_cache (
                     content_hash TEXT PRIMARY KEY,
                     content TEXT NOT NULL,

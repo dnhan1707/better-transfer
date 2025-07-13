@@ -1,0 +1,19 @@
+{
+  "community_college": "Pasadena City College",
+  "university": "University of California, Irvine",
+  "major": "Data Science",
+  "course_mapping": [
+    "Courses CS 002 (Fundamentals of Computer Science I) and CS 003B (Fundamentals of Computer Science (JAVA)) at Pasadena City College must be taken to satisfy courses I&C SCI 31 (Introduction to Programming), I&C SCI 32 (Programming with Software Libraries), and I&C SCI 33 (Intermediate Programming) at University of California, Irvine for the data science major.",
+    "Courses CS 002 (Fundamentals of Computer Science I) and CS 003C (Fundamentals of Computer Science (Python)) at Pasadena City College must be taken to satisfy courses I&C SCI 31, I&C SCI 32, and I&C SCI 33 at UC Irvine for the data science major.",
+    "Courses CS 003B and CS 033 (Advanced JAVA Programming and Algorithm with Data Structures) at Pasadena City College must be taken to satisfy I&C SCI 31, 32, and 33 at UC Irvine for the data science major.",
+    "Courses CS 003C and CS 034 (Advanced Python Programming and Basic Data Structures) at Pasadena City College must be taken to satisfy I&C SCI 31, 32, and 33 at UC Irvine for the data science major.",
+    "Course MATH 005A (Single Variable Calculus I) at Pasadena City College must be taken to satisfy MATH 2A (Single-Variable Calculus) at University of California, Irvine for the data science major.",
+    "Course MATH 005B (Single Variable Calculus II) at Pasadena City College must be taken to satisfy MATH 2B (Single-Variable Calculus) at University of California, Irvine for the data science major.",
+    "Course MATH 005C (Multivariable Calculus) at Pasadena City College must be taken to satisfy MATH 2D (Multivariable Calculus) at University of California, Irvine for the data science major.",
+    "Course MATH 010 (Linear Algebra and Applications) at Pasadena City College must be taken to satisfy MATH 3A (Introduction to Linear Algebra) at University of California, Irvine for the data science major.",
+    "Course MATH 022 (Discrete Mathematics) at Pasadena City College must be taken to satisfy I&C SCI 6D (Discrete Mathematics for Computer Science) at University of California, Irvine for the data science major.",
+    "Courses CS 002 (Fundamentals of Computer Science I) and CS 003A (Fundamentals of Computer Science II (C++)) at Pasadena City College must be taken to satisfy I&C SCI 45C (Programming in C/C++ as a Second Language) at University of California, Irvine for the data science major.",
+    "Course CS 008 (Fundamentals of Computer Science III - Data Structures) at Pasadena City College must be taken to satisfy I&C SCI 46 (Data Structure Implementation and Analysis) at University of California, Irvine for the data science major.",
+    "Course STAT 050 (Elementary Statistics) at Pasadena City College must be taken to satisfy STATS 7 (Basic Statistics) at University of California, Irvine for the data science major."
+  ]
+}
