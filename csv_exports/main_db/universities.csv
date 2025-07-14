@@ -1,0 +1,6 @@
+id,university_name,is_uc
+1,"University of California, Los Angeles",True
+2,"University of California, Berkeley",True
+3,"University of California, Irvine",True
+4,"California State University, Los Angeles",False
+5,"California State University, Northridge",False
