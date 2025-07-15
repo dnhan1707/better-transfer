@@ -1,6 +1,4 @@
-import openai
 from openai import OpenAI
-import os
 from dotenv import load_dotenv
 import json
 from app.utils.logging_config import get_logger

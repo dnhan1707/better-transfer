@@ -1,10 +1,10 @@
 from app.db.connection.mongo_connection import MongoDB
-from typing import List, Dict, Any, Optional
+from typing import Dict, Any
 
 
 class PrerequisiteService:
     def __init__(self):
-        self.mongo_db = MongoDB()
+        self.mongo_db = MongoDB("course_prerequisite")
         self.collection = self.mongo_db.get_collection("pcc_course_prerequisites")
 
 

@@ -1,7 +1,0 @@
-[
-    {"university_name": "University of California, Los Angeles", "is_uc": true},
-    {"university_name": "University of California, Berkeley", "is_uc": true},
-    {"university_name": "University of California, Irvine", "is_uc": true},
-    {"university_name": "California State University, Los Angeles", "is_uc": false},
-    {"university_name": "California State University, Northridge", "is_uc": false}
-  ]
