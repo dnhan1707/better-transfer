@@ -6,7 +6,6 @@ from RAG.services.synthesizer import Synthesizer
 from app.utils.logging_config import get_logger
 import json
 import traceback
-from RAG.db.prereqisite_graph import prerequisite_graph
 from app.db.services.mongo_services import PrerequisiteService
 
 logger = get_logger(__name__)
@@ -18,7 +17,7 @@ class TransferPlanService:
         self.synthesizer = Synthesizer()
         self.prerequisite_service = PrerequisiteService()
 
-    async def create_RAG_transfer_plan_v2(self, app_db: Session, vector_db: Session, full_request: FullRequest):
+    async def create_RAG_transfer_plan_v2(self, full_request: FullRequest):
         try:
             # Validate input
             if not full_request.request:
@@ -29,7 +28,7 @@ class TransferPlanService:
             college = None
             
             for request in full_request.request:
-                basic_info = db_get_basic_info(app_db, request)
+                basic_info = await db_get_basic_info(request)
                 if not basic_info:
                     logger.error(f"Could not find information for request: {request}")
                     continue
@@ -56,7 +55,7 @@ class TransferPlanService:
             query = "\n".join(query_parts)
             
             # Get context for all targets at once
-            vector_res = await self.vector_store.vector_search_v2(vector_db, query, target_combinations)
+            vector_res = await self.vector_store.vector_search_v2(query, target_combinations)
             
             # Generate the optimized plan
             result = await self.synthesizer.generate_response(question=query, number_of_terms=full_request.number_of_terms, vector_res=vector_res)
@@ -256,7 +255,7 @@ class TransferPlanService:
         max_term = 0
         for prereq in graph[code]["prerequisites"]:
             if prereq in graph:
-                self._calculate_earliest_term(prereq, graph, visited)
+                await self._calculate_earliest_term(prereq, graph, visited)
                 max_term = max(max_term, graph[prereq]["earliest_term"])
                 
         graph[code]["earliest_term"] = max_term + 1

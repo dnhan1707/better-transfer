@@ -5,17 +5,22 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class MongoDB:
-    _instance = None
-    _client = None
-    _db = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(MongoDB, cls).__new__(cls)
+    _instances = {}
+    
+    def __new__(cls, database_name: str = None):
+        # Use default database if none specified
+        if database_name is None:
+            database_name = "course_prerequisite"
+            
+        if database_name not in cls._instances:
+            instance = super(MongoDB, cls).__new__(cls)
             connection_url = os.getenv("MONGO_DB_PCC_CLUSTER_CONNECTION_URL")
-            cls._client = AsyncIOMotorClient(connection_url)
-            cls._db = cls._client.get_database("course_prerequisite")
-        return cls._instance
+            instance._client = AsyncIOMotorClient(connection_url)
+            instance._db = instance._client.get_database(database_name)
+            instance._database_name = database_name
+            cls._instances[database_name] = instance
+        
+        return cls._instances[database_name]
 
     def get_db(self):
         """Get MongoDB database instance"""
@@ -29,3 +34,13 @@ class MongoDB:
         """Close the MongoDB connection"""
         if self._client:
             self._client.close()
+            # Remove from instances when closed
+            if self._database_name in self._instances:
+                del self._instances[self._database_name]
+
+    @classmethod
+    def close_all_connections(cls):
+        """Close all MongoDB connections"""
+        for instance in cls._instances.values():
+            instance.close_connection()
+        cls._instances.clear()

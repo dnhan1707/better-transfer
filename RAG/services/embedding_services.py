@@ -3,7 +3,6 @@ from typing import List
 from app.utils.logging_config import get_logger
 from RAG.config.settings import get_settings
 from RAG.services.caching_service import CachingService
-from sqlalchemy.orm import Session
 
 logger = get_logger(__name__)
 
@@ -14,10 +13,11 @@ class EmbeddingService:
         self.client = OpenAI(api_key=settings.openai.api_key)
         self.caching_service = CachingService()
 
-    async def batch_create_embedding(self, texts: List[str], db=Session) -> List[List[float]]:
-        if db is None:
-            # No database connection provided, can't use cache
-            logger.info("No database connection provided, skipping cache and generating all embeddings")
+    async def batch_create_embedding(self, texts: List[str], use_cache: bool = True) -> List[List[float]]:
+        """Create embeddings for multiple texts with optional caching"""
+        if not use_cache:
+            # No caching, generate all embeddings
+            logger.info("Caching disabled, generating all embeddings")
             return await self._generate_embeddings(texts)
             
         try:
@@ -30,7 +30,7 @@ class EmbeddingService:
             
             # First, check cache for each text
             for idx, text in enumerate(texts):
-                cached_embedding = await self.caching_service.get_cached_embedding(db, text)
+                cached_embedding = await self.caching_service.get_cached_embedding(text)
                 if cached_embedding:
                     logger.debug(f"Cache hit for text: {text[:30]}...")
                     result_embeddings[idx] = cached_embedding
@@ -53,7 +53,7 @@ class EmbeddingService:
                 text = texts[orig_idx]
                 
                 # Update cache with new embedding
-                await self.caching_service.cache_embedding(db, text, embedding)
+                await self.caching_service.cache_embedding(text, embedding)
                 
                 # Place in result at original position
                 result_embeddings[orig_idx] = embedding
@@ -65,24 +65,28 @@ class EmbeddingService:
 
     async def _generate_embeddings(self, texts: List[str]) -> List[List[float]]:
         """Internal method to generate embeddings from OpenAI API"""
-        response = self.client.embeddings.create(
-            model=self.model,
-            input=texts
-        )
-        
-        embeddings = [data.embedding for data in response.data]
-        return embeddings
+        try:
+            response = self.client.embeddings.create(
+                model=self.model,
+                input=texts
+            )
+            
+            embeddings = [data.embedding for data in response.data]
+            return embeddings
+        except Exception as e:
+            logger.error(f"Error generating embeddings from OpenAI: {e}")
+            raise
 
-    async def create_embedding(self, text: str, db: Session) -> List[float]:
+    async def create_embedding(self, text: str, use_cache: bool = True) -> List[float]:
         """Create a single embedding with optional caching"""
-        if db is None:
-            # No database connection, can't use cache
+        if not use_cache:
+            # No caching, generate embedding directly
             embeddings = await self._generate_embeddings([text])
             return embeddings[0]
             
         try:
             # First check cache
-            cached_embedding = await self.caching_service.get_cached_embedding(db, text)
+            cached_embedding = await self.caching_service.get_cached_embedding(text)
             if cached_embedding:
                 logger.debug(f"Using cached embedding for: {text[:30]}...")
                 return cached_embedding
@@ -92,9 +96,17 @@ class EmbeddingService:
             embedding = embeddings[0]
             
             # Cache the new embedding
-            await self.caching_service.cache_embedding(db, text, embedding)
+            await self.caching_service.cache_embedding(text, embedding)
             
             return embedding
         except Exception as e:
             logger.error(f"Error creating cached embedding: {e}")
             raise
+
+    async def create_embedding_no_cache(self, text: str) -> List[float]:
+        """Create a single embedding without using cache"""
+        return await self.create_embedding(text, use_cache=False)
+
+    async def batch_create_embedding_no_cache(self, texts: List[str]) -> List[List[float]]:
+        """Create multiple embeddings without using cache"""
+        return await self.batch_create_embedding(texts, use_cache=False)

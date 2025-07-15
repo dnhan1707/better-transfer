@@ -11,7 +11,7 @@ async def seed_mongodb():
     """Migrate prerequisite data from Python file to MongoDB"""
     print("Starting migration of prerequisite data to MongoDB...")
 
-    mongo = MongoDB()
+    mongo = MongoDB("course_prerequisite")
     collection = mongo.get_collection("pcc_course_prerequisites")
     
     # Drop existing collection to start fresh
@@ -49,9 +49,6 @@ async def seed_mongodb():
         print("No documents to migrate")
     
     print("Migration completed")
-
-
-
 
 if __name__ == "__main__":
     load_dotenv()
