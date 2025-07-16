@@ -1,10 +1,8 @@
-from sqlalchemy.orm import Session
 from app.db.queries.institution_queries import db_get_basic_info
 from app.schemas.transferPlanRequest import FullRequest, ReOrderRequestModel
 from RAG.db.vector_store import VectorStore
 from RAG.services.synthesizer import Synthesizer
 from app.utils.logging_config import get_logger
-import json
 import traceback
 from app.db.services.mongo_services import PrerequisiteService
 
@@ -67,42 +65,6 @@ class TransferPlanService:
             traceback.print_exc()
             return {"error": str(e)}
         
-
-    async def re_order_transfer_plan_v1(self, app_db: Session, vector_db: Session, request: ReOrderRequestModel):
-        try:
-            if not request.taken_classes or len(request.taken_classes) == 0:
-                logger.error("No taken classes provided in request")
-                return {"error": "Please specify at least one taken course"}
-            
-            original_plan = request.original_plan.model_dump()
-            taken_classes = request.taken_classes
-            source_college = request.original_plan.source_college
-            courses_data = await self.vector_store.get_courses_data(vector_db, source_college)
-
-            user_prompt = f"""
-                # Original Transfer Plan Structure (to maintain)
-                {json.dumps(original_plan, indent=2)}
-
-                # Courses Already Taken (remove these)
-                {json.dumps(taken_classes, indent=2)}
-
-                # Instructions
-                Please reorganize the transfer plan while:
-                1. Preserving the EXACT same JSON structure shown above
-                2. Removing all courses in the "taken_classes" list
-                3. Redistributing remaining courses across the same number of terms
-                4. Maintaining prerequisite ordering
-            """
-
-            return await self.synthesizer.generate_reorder_plan_response(user_prompt, courses_data)
-            
-
-        except Exception as e:
-            logger.error(f"Error RAG re-order transfer plan: {str(e)}")
-            traceback.print_exc()
-            return {"error": str(e)}
-        
-
     async def re_order_transfer_plan_v2(self, request: ReOrderRequestModel):
         """Algorithmically reorder a transfer plan after removing taken courses."""
         try:
