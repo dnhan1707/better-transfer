@@ -2,6 +2,16 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 
 
+class InstitutionIds(BaseModel):
+    collegeId: str = Field(..., description="College Id")
+    universityId: str = Field(..., description="University Id")
+    majorId: str = Field(..., description="Major Id")
+
+
+class InputRequest(BaseModel):
+    targets: List[InstitutionIds] = Field(..., description="List of college, university and major Id")
+    number_of_terms: int = Field(..., description="Number of terms in total")
+
 class TransferPlanRequest(BaseModel):
     """Base model for institution identifiers used across services"""
     college_id: int = Field(..., description="Community College Id")

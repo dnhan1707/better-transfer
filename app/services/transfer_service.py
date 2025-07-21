@@ -1,10 +1,11 @@
 from app.db.queries.institution_queries import db_get_basic_info
-from app.schemas.transferPlanRequest import FullRequest, ReOrderRequestModel
+from app.schemas.transferPlanRequest import FullRequest, ReOrderRequestModel, InputRequest
 from RAG.db.vector_store import VectorStore
 from RAG.services.synthesizer import Synthesizer
 from app.utils.logging_config import get_logger
 import traceback
 from app.db.services.mongo_services import PrerequisiteService
+from app.services.agreement_service import AgreementService
 
 logger = get_logger(__name__)
 
@@ -14,6 +15,33 @@ class TransferPlanService:
         self.vector_store = VectorStore()
         self.synthesizer = Synthesizer()
         self.prerequisite_service = PrerequisiteService()
+        self.agreement_service = AgreementService()
+
+
+    async def get_transferplan(self, request: InputRequest):
+        try:
+            return await self.agreement_service.get_transferplan(request)
+        except Exception as e:
+            logger.error(f"Error in get_classlist: {str(e)}")
+            traceback.print_exc()
+            return {"error": str(e)}
+
+    async def get_classlist(self, request: InputRequest):
+        try:
+            return await self.agreement_service.get_classlist(request)
+        except Exception as e:
+            logger.error(f"Error in get_classlist: {str(e)}")
+            traceback.print_exc()
+            return {"error": str(e)}
+
+    async def get_agreements(self, request: InputRequest):
+        try:
+            return await self.agreement_service.get_agreements(request)
+        
+        except Exception as e:
+            logger.error(f"Error in get_agreements: {str(e)}")
+            traceback.print_exc()
+            return {"error": str(e)}
 
     async def create_RAG_transfer_plan_v2(self, full_request: FullRequest):
         try:

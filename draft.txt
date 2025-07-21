@@ -1,0 +1,52 @@
+{
+  "_id": { "$oid": "6875cb65f0d694d541358a90" },
+
+  "collegeId": { "$oid": "6875cb5ff0d694d541358a7f" },
+  "universityId": { "$oid": "6875cb60f0d694d541358a84" },
+  "majorId": { "$oid": "6875cb60f0d694d541358a86" },
+
+  "rules": [
+    {
+      "source": { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6a1b" }},
+      "target": { "type": "COURSE", "code": "CS 31" }
+    },
+
+    {
+      "source": {
+        "type": "GROUP",
+        "operator": "AND",
+        "children": [
+          { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6a1c" }},
+          { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6a1d" }}
+        ]
+      },
+      "target": { "type": "COURSE", "code": "CS 32" }
+    },
+
+    {
+      "source": {
+        "type": "GROUP",
+        "operator": "OR",
+        "children": [
+          { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6cc9" } },
+          {
+            "type": "GROUP",
+            "operator": "AND",
+            "children": [
+              { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6ccd" } },
+              { "type": "COURSE", "id": { "$oid": "686ef7a7c036e98a2a1c6cce" } }
+            ]
+          }
+        ]
+      },
+      "target": {
+        "type": "GROUP",
+        "operator": "AND",
+        "children": [
+          { "type": "COURSE", "code": "MATH 1A" },
+          { "type": "COURSE", "code": "MATH 1B" }
+        ]
+      }
+    }
+  ]
+}
