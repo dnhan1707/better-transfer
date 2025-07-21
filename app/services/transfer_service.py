@@ -4,8 +4,12 @@ from RAG.db.vector_store import VectorStore
 from RAG.services.synthesizer import Synthesizer
 from app.utils.logging_config import get_logger
 import traceback
+import json
+import redis
+import os
+from dotenv import load_dotenv
 from app.db.services.mongo_services import PrerequisiteService
-
+load_dotenv()
 logger = get_logger(__name__)
 
 class TransferPlanService:
@@ -14,9 +18,28 @@ class TransferPlanService:
         self.vector_store = VectorStore()
         self.synthesizer = Synthesizer()
         self.prerequisite_service = PrerequisiteService()
+        self.redis_client = redis.Redis(
+            host=os.getenv("REDIS_HOST"),
+            port=int(os.getenv("REDIS_PORT")),
+            username=os.getenv("REDIS_USERNAME"),
+            password=os.getenv("REDIS_PASSWORD"),
+            decode_responses=False  # Keep binary for efficient storage
+        )
+        logger.info("Redis connection initialized")
 
     async def create_RAG_transfer_plan_v2(self, full_request: FullRequest):
         try:
+            # Create a cache key from the full_request
+            cache_key = f"transfer_plan:{self._get_request_hash(full_request)}"
+            
+            # Check if result exists in cache
+            cached_result = self.redis_client.get(cache_key)
+            if cached_result:
+                logger.info("Cache hit for transfer plan request")
+                return json.loads(cached_result)
+            
+            logger.info("Cache miss for transfer plan request")
+            
             # Validate input
             if not full_request.request:
                 return {"error": "No transfer plan requests provided"}
@@ -58,13 +81,18 @@ class TransferPlanService:
             # Generate the optimized plan
             result = await self.synthesizer.generate_response(question=query, number_of_terms=full_request.number_of_terms, vector_res=vector_res)
             
+            # Cache the result before returning
+            self.redis_client.set(cache_key, json.dumps(result), ex=86400)  # Cache for 24 hours
+            logger.info(f"Cached transfer plan result with key: {cache_key}")
+            
             return result
-                
+            
         except Exception as e:
             logger.error(f"Error RAG creating transfer plan: {str(e)}")
             traceback.print_exc()
             return {"error": str(e)}
         
+
     async def re_order_transfer_plan_v2(self, request: ReOrderRequestModel):
         """Algorithmically reorder a transfer plan after removing taken courses."""
         try:
@@ -108,13 +136,20 @@ class TransferPlanService:
 
 # =================================== Helper Functions ===============================================
 
-    async def extract_all_courses(self, plan):
-        """Extract all courses from the original plan."""
-        all_courses = []
-        for term in plan["term_plan"]:
-            for course in term["courses"]:
-                all_courses.append(course)
-        return all_courses
+    def _get_request_hash(self, full_request: FullRequest):
+        """Create a consistent hash from a FullRequest object for use as a cache key"""
+        # Convert to dict first
+        request_dict = full_request.model_dump()
+        # Sort the dict to ensure consistent serialization
+        serialized = json.dumps(request_dict, sort_keys=True)
+        return serialized
+        async def extract_all_courses(self, plan):
+            """Extract all courses from the original plan."""
+            all_courses = []
+            for term in plan["term_plan"]:
+                for course in term["courses"]:
+                    all_courses.append(course)
+            return all_courses
     
     async def filter_taken_course(self, taken_courses, all_courses, prerequisite_data):
         """
