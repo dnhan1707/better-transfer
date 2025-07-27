@@ -72,10 +72,15 @@ class EmbeddingService:
             )
             
             embeddings = [data.embedding for data in response.data]
+            logger.info("Finish created embedding")
             return embeddings
         except Exception as e:
-            logger.error(f"Error generating embeddings from OpenAI: {e}")
-            raise
+            if "insufficient_quota" in str(e):
+                logger.error("OpenAI quota exceeded. Please check your billing and usage limits.")
+                raise Exception("OpenAI API quota exceeded. Please check your account billing.")
+            else:
+                logger.error(f"Error generating embeddings from OpenAI: {e}")
+                raise
 
     async def create_embedding(self, text: str, use_cache: bool = True) -> List[float]:
         """Create a single embedding with optional caching"""
@@ -93,6 +98,7 @@ class EmbeddingService:
                 
             # Generate new embedding if not cached
             embeddings = await self._generate_embeddings([text])
+            logger.info("Finsihed generate embedding")
             embedding = embeddings[0]
             
             # Cache the new embedding

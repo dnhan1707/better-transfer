@@ -2,16 +2,17 @@ from app.db.connection.mongo_connection import MongoDB
 from app.schemas.transferPlanRequest import TransferPlanRequest
 from typing import Dict, Optional, Any, List
 from app.utils.logging_config import get_logger
+from bson.objectid import ObjectId
 
 logger = get_logger(__name__)
 
-async def db_get_university_by_id(university_id: int) -> Optional[str]:
+async def db_get_university_by_id(university_id: str) -> Optional[str]:
     """Get university details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("universities")
         
-        university = await collection.find_one({"id": university_id})
+        university = await collection.find_one({"_id": ObjectId(university_id)})
         if university:
             return university.get("university_name")
         return None
@@ -19,13 +20,13 @@ async def db_get_university_by_id(university_id: int) -> Optional[str]:
         logger.error(f"Error fetching university by ID {university_id}: {e}")
         return None
 
-async def db_get_major_by_id(major_id: int) -> Optional[str]:
+async def db_get_major_by_id(major_id: str) -> Optional[str]:
     """Get major details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("majors")
         
-        major = await collection.find_one({"id": major_id})
+        major = await collection.find_one({"_id": ObjectId(major_id)})
         if major:
             return major.get("major_name")
         return None
@@ -33,13 +34,13 @@ async def db_get_major_by_id(major_id: int) -> Optional[str]:
         logger.error(f"Error fetching major by ID {major_id}: {e}")
         return None
 
-async def db_get_college_by_id(college_id: int) -> Optional[str]:
+async def db_get_college_by_id(college_id: str) -> Optional[str]:
     """Get college details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("colleges")
         
-        college = await collection.find_one({"id": college_id})
+        college = await collection.find_one({"_id": ObjectId(college_id)})
         if college:
             return college.get("college_name")
         return None
@@ -47,13 +48,13 @@ async def db_get_college_by_id(college_id: int) -> Optional[str]:
         logger.error(f"Error fetching college by ID {college_id}: {e}")
         return None
 
-async def db_get_university_details_by_id(university_id: int) -> Optional[Dict[str, Any]]:
+async def db_get_university_details_by_id(university_id: str) -> Optional[Dict[str, Any]]:
     """Get complete university details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("universities")
         
-        university = await collection.find_one({"id": university_id})
+        university = await collection.find_one({"_id": ObjectId(university_id)})
         if university:
             # Remove MongoDB's _id field for cleaner response
             university.pop('_id', None)
@@ -63,13 +64,13 @@ async def db_get_university_details_by_id(university_id: int) -> Optional[Dict[s
         logger.error(f"Error fetching university details by ID {university_id}: {e}")
         return None
 
-async def db_get_major_details_by_id(major_id: int) -> Optional[Dict[str, Any]]:
+async def db_get_major_details_by_id(major_id: str) -> Optional[Dict[str, Any]]:
     """Get complete major details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("majors")
         
-        major = await collection.find_one({"id": major_id})
+        major = await collection.find_one({"_id": ObjectId(major_id)})
         if major:
             # Remove MongoDB's _id field for cleaner response
             major.pop('_id', None)
@@ -79,13 +80,13 @@ async def db_get_major_details_by_id(major_id: int) -> Optional[Dict[str, Any]]:
         logger.error(f"Error fetching major details by ID {major_id}: {e}")
         return None
 
-async def db_get_college_details_by_id(college_id: int) -> Optional[Dict[str, Any]]:
+async def db_get_college_details_by_id(college_id: str) -> Optional[Dict[str, Any]]:
     """Get complete college details by ID."""
     try:
         mongo = MongoDB("main_db")
         collection = mongo.get_collection("colleges")
         
-        college = await collection.find_one({"id": college_id})
+        college = await collection.find_one({"_id": ObjectId(college_id)})
         if college:
             # Remove MongoDB's _id field for cleaner response
             college.pop('_id', None)
