@@ -4,15 +4,9 @@ from typing import List, Optional
 
 class TransferPlanRequest(BaseModel):
     """Base model for institution identifiers used across services"""
-    college_id: int = Field(..., description="Community College Id")
-    university_id: int = Field(..., description="University Id")
-    major_id: int = Field(..., description="Major Id")
-
-    @field_validator('college_id', 'university_id', 'major_id')
-    def validate_ids_positive(cls, v):
-        if v <= 0:
-            raise ValueError("IDs must be positive integers")
-        return v    
+    college_id: str = Field(..., description="Community College Id")
+    university_id: str = Field(..., description="University Id")
+    major_id: str = Field(..., description="Major Id")
 
 
 class FullRequest(BaseModel):

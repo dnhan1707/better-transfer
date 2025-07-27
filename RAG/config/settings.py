@@ -16,8 +16,8 @@ class LLMSettings(BaseModel):
 
 class OpenAISettings(LLMSettings):
     api_key: str = Field(default_factory=lambda: os.getenv("OPENAI_API_KEY"))
-    default_model: str = Field(default="gpt-4o")
-    embedding_model: str =  Field(default="text-embedding-ada-002")
+    default_model: str = Field(default="gpt-4o-mini")
+    embedding_model: str =  Field(default="text-embedding-3-small")
 
 class DatabaseSettings(BaseModel):
     service_url: str = Field(default_factory=lambda: os.getenv("RAG_DATABASE_URL"))
