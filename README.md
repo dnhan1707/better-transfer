@@ -2,15 +2,17 @@
 
 Better Transfer is a research project exploring how Retrieval Augmented Generation (RAG) can help community college students plan their academic path when transferring to a four‑year university.
 
-The backend is built with **FastAPI** and stores transfer knowledge in a dedicated pgvector database. OpenAI embeddings and GPT models are used to synthesize a customized transfer plan for each request.
+The backend is built with **FastAPI** and stores transfer knowledge in **MongoDB**.  
+OpenAI embeddings and GPT models are used to synthesize plans, with caching layers in both MongoDB and Redis.
 
 ## Features
 
-- Articulation agreements and prerequisite tracking in PostgreSQL
-- Vector storage with the pgvector extension and HNSW index
-- Async API endpoints to generate transfer plans with or without RAG
-- Helper scripts to seed data and populate embeddings
-- Docker compose configuration for the vector database
+- Course and articulation data stored in MongoDB
+- Vector search using MongoDB's native vector index
+- Redis and MongoDB caching to speed up responses
+- Async FastAPI endpoints for transfer plans and plan reordering
+- Helper scripts to seed MongoDB collections
+- Docker compose configuration for local development
 
 ## 📦 Sample Response
 
@@ -26,24 +28,26 @@ View the full optimized plan:
 
 1. Install Python dependencies:
    ```bash
-   pip install -r requirement.txt
+   pip install -r requirements.txt
    ```
-2. Create a `.env` file with at least these values:
+2. Copy `.env.example` to `.env` and set these values:
    ```
-   DATABASE_URL=<application database URL>
-   RAG_DATABASE_URL=<vector database URL>
-   OPENAI_API_KEY=<your OpenAI key>
+   OPENAI_API_KEY=<your-openai-key>
+   MONGO_DB_PCC_CLUSTER_CONNECTION_URL=<mongo-connection>
+   MONGO_DB_USERNAME=<username>
+   MONGO_DB_PASS=<password>
+   REDIS_HOST=<redis-host>
+   REDIS_PORT=<redis-port>
+   REDIS_USERNAME=<redis-user>
+   REDIS_PASSWORD=<redis-pass>
    ```
-3. Launch PostgreSQL with pgvector:
+3. Start the development services:
    ```bash
    docker-compose up -d
    ```
-4. Initialize the vector store and insert embeddings:
+4. Seed MongoDB collections with sample data:
    ```bash
-   alembic init alembic
-   alembic revision --autogenerate -m "create models"
-   python scripts/seed_better_transfer_db.py
-   python scripts/seed_embedding_vector_db.py
+   python scripts/seed_scripts/seed_all.py
    ```
 
 ## Running the API
@@ -54,8 +58,11 @@ uvicorn app.main:app --reload
 ```
 
 The following endpoints are available:
-- `POST /transfer-plan` – rule‑based planner
-- `POST /transfer-plan/rag` – RAG enhanced planner
+- `POST /transfer-plan/v2/rag` – generate a transfer plan with RAG
+- `POST /transfer-plan/v2/reorder` – reorder a plan after marking courses as taken
+- `GET  /transfer-plan/v1/majorlist/{university_id}/{college_id}` – list majors
+- `GET  /transfer-plan/v1/universities` – list universities
+- `GET  /transfer-plan/v1/colleges` – list colleges
 
 ## Tests
 
@@ -69,7 +76,7 @@ pytest
 - `app/` – FastAPI application and database models
 - `RAG/` – vector store, embedding service, and GPT synthesizer
 - `scripts/` – utilities for seeding and vector generation
-- `docker-compose.yml` – container for the pgvector database
+- `docker-compose.yml` – local stack with FastAPI, MongoDB and Redis
 
 ## Prompt Customization
 
